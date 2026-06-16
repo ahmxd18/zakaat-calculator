@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+/* ── Custom theme tokens via Tailwind v4 CSS API ── */
+@theme {
+  /* Fonts */
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-body: "Inter", system-ui, sans-serif;
+
+  /* Color Palette */
+  --color-cream-50:  #fdfaf5;
+  --color-cream-100: #f8f2e4;
+  --color-cream-200: #f0e4cc;
+  --color-cream-300: #e4d0b0;
+
+  --color-blush-50:  #fdf2f4;
+  --color-blush-100: #fce4e9;
+  --color-blush-200: #f9c9d3;
+  --color-blush-300: #f3a0b3;
+  --color-blush-400: #e8728f;
+  --color-blush-500: #d94f70;
+
+  --color-sage-50:  #f2f7f2;
+  --color-sage-100: #e0ecdf;
+  --color-sage-200: #c0d9bd;
+  --color-sage-300: #93be90;
+  --color-sage-400: #629e5e;
+  --color-sage-500: #4a7d47;
+  --color-sage-600: #3a6337;
+  --color-sage-700: #2e4f2c;
+  --color-sage-800: #243e22;
+  --color-sage-900: #1c301a;
+
+  --color-charcoal-50:  #f5f3f0;
+  --color-charcoal-100: #e8e3dc;
+  --color-charcoal-200: #d0c8bc;
+  --color-charcoal-300: #b0a494;
+  --color-charcoal-400: #8e7e6c;
+  --color-charcoal-500: #6e604e;
+  --color-charcoal-600: #534838;
+  --color-charcoal-700: #3c342a;
+  --color-charcoal-800: #2a2420;
+  --color-charcoal-900: #1a1714;
+
+  /* Border radius */
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
+}
+
+/* ── Base styles ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-cream-50);
+  color: var(--color-charcoal-800);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100dvh;
+}
+
+/* Display font helper */
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-cream-100);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-sage-300);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-sage-400);
+}
+
+/* Focus ring */
+:focus-visible {
+  outline: 2px solid var(--color-sage-400);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Smooth transitions for interactive elements */
+a, button {
+  transition: color 0.2s ease, background-color 0.2s ease, opacity 0.2s ease, transform 0.15s ease;
+}
