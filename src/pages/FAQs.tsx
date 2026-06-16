@@ -10,10 +10,11 @@ import { Accordion }     from "../components/ui/Accordion";
 import { SectionHeader } from "../components/ui/SectionHeader";
 import { Button }        from "../components/ui/Button";
 import { Container }     from "../components/layout/Container";
+import { PageLayout }    from "../components/layout/PageLayout";
 
 export function FAQs() {
   return (
-    <main className="min-h-screen bg-cream-50 pt-20 pb-20">
+    <PageLayout className="!pt-0">
 
       {/* ── Hero banner ── */}
       <section
@@ -83,6 +84,6 @@ export function FAQs() {
         </Container>
       </section>
 
-    </main>
+    </PageLayout>
   );
 }

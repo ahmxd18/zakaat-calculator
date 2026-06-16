@@ -4,12 +4,13 @@
  */
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Mail, MapPin, Clock, Send, CheckCircle2 } from "lucide-react";
+import { Mail, MapPin, Clock, Send, CheckCircle2, Info } from "lucide-react";
 import { CONTACT } from "../constants/content";
 import { Button }        from "../components/ui/Button";
 import { Card, RevealCard }        from "../components/ui/Card";
 import { SectionHeader } from "../components/ui/SectionHeader";
 import { Container }     from "../components/layout/Container";
+import { PageLayout }    from "../components/layout/PageLayout";
 
 const ContactInfoIcon: Record<string, React.FC<{ className?: string }>> = {
   mail:    ({ className }) => <Mail    className={className} />,
@@ -19,17 +20,16 @@ const ContactInfoIcon: Record<string, React.FC<{ className?: string }>> = {
 
 export function Contact() {
   const [submitted, setSubmitted] = useState(false);
+  const [formDisabled] = useState(true); // No backend yet
 
-  // Placeholder submit handler — no actual logic
+  // Placeholder submit handler — disabled until backend ready
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Wire up form submission (Phase 2)
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 4000);
+    // Submission disabled - no backend
   };
 
   return (
-    <main className="min-h-screen bg-cream-50 pt-20 pb-20">
+    <PageLayout>
 
       {/* ── Page header ── */}
       <section className="py-16 sm:py-24 bg-white border-b border-cream-200">
@@ -100,6 +100,17 @@ export function Contact() {
             <div className="lg:col-span-2">
               <RevealCard delay={0.15}>
                 <Card padding="lg">
+                  {/* Coming soon banner */}
+                  <div className="mb-6 rounded-xl bg-blush-50 border border-blush-200 p-4 flex items-start gap-3">
+                    <Info className="h-5 w-5 text-blush-500 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-semibold text-blush-700">Form Coming Soon</p>
+                      <p className="text-xs text-blush-600 mt-0.5">
+                        This contact form is not yet connected to a backend service. Please reach out via email directly at {CONTACT.info[0].value}
+                      </p>
+                    </div>
+                  </div>
+                  
                   {submitted ? (
                     <motion.div
                       initial={{ opacity: 0, scale: 0.9 }}
@@ -183,13 +194,14 @@ export function Contact() {
                         variant="primary"
                         size="lg"
                         fullWidth
+                        disabled={formDisabled}
                         rightIcon={<Send className="h-4 w-4" />}
                       >
                         {CONTACT.form.submitLabel}
                       </Button>
 
                       <p className="text-xs text-charcoal-400 text-center">
-                        By submitting this form, you agree to our privacy policy. We never share your data.
+                        Form currently disabled — email us directly instead.
                       </p>
                     </form>
                   )}
@@ -200,6 +212,6 @@ export function Contact() {
         </Container>
       </section>
 
-    </main>
+    </PageLayout>
   );
 }

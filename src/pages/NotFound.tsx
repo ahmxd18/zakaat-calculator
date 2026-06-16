@@ -2,15 +2,18 @@
  * NotFound.tsx
  * 404 fallback page.
  */
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Home, ArrowLeft } from "lucide-react";
 import { Button } from "../components/ui/Button";
 import { Container } from "../components/layout/Container";
+import { PageLayout } from "../components/layout/PageLayout";
 
 export function NotFound() {
+  const navigate = useNavigate();
+  
   return (
-    <main className="min-h-screen bg-cream-50 pt-20 flex items-center justify-center">
+    <PageLayout className="flex items-center justify-center">
       <Container narrow className="text-center py-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -42,14 +45,17 @@ export function NotFound() {
                 Back to Home
               </Button>
             </Link>
-            <button onClick={() => window.history.back()}>
-              <Button variant="ghost" size="md" leftIcon={<ArrowLeft className="h-4 w-4" />}>
-                Go Back
-              </Button>
-            </button>
+            <Button 
+              variant="ghost" 
+              size="md" 
+              leftIcon={<ArrowLeft className="h-4 w-4" />}
+              onClick={() => navigate(-1)}
+            >
+              Go Back
+            </Button>
           </div>
         </motion.div>
       </Container>
-    </main>
+    </PageLayout>
   );
 }

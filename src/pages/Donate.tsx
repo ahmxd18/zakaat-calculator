@@ -11,6 +11,8 @@ import { Button }        from "../components/ui/Button";
 import { RevealCard }    from "../components/ui/Card";
 import { SectionHeader } from "../components/ui/SectionHeader";
 import { Container }     from "../components/layout/Container";
+import { PageLayout }    from "../components/layout/PageLayout";
+import { LAYOUT }        from "../constants/layout";
 
 type Charity = (typeof DONATE.charities)[number];
 
@@ -100,7 +102,7 @@ export function Donate() {
       : DONATE.charities.filter(c => c.category === activeCategory);
 
   return (
-    <main className="min-h-screen bg-cream-50 pt-20 pb-20">
+    <PageLayout>
 
       {/* ── Hero ── */}
       <section
@@ -129,7 +131,7 @@ export function Donate() {
       </section>
 
       {/* ── Category filter ── */}
-      <section className="py-8 bg-white border-b border-cream-200 sticky top-16 z-30 shadow-sm">
+      <section className={`py-8 bg-white border-b border-cream-200 sticky ${LAYOUT.STICKY_TOP} z-30 shadow-sm`}>
         <Container>
           <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
             <span className="text-xs font-semibold text-charcoal-500 shrink-0 mr-1">Filter:</span>
@@ -154,6 +156,13 @@ export function Donate() {
       {/* ── Charity cards ── */}
       <section className="py-12 sm:py-16">
         <Container>
+          {/* Disclaimer */}
+          <div className="mb-8 rounded-xl bg-blush-50 border border-blush-200 p-4">
+            <p className="text-xs text-blush-700 leading-relaxed">
+              ⚠️ <strong>Note:</strong> Listed charities are placeholder examples pending verification and partnership agreements. We do not endorse any organization until formal vetting is complete. Always verify charity credentials independently.
+            </p>
+          </div>
+          
           <AnimatePresence mode="wait">
             <motion.div
               key={activeCategory}
@@ -205,6 +214,6 @@ export function Donate() {
         </Container>
       </section>
 
-    </main>
+    </PageLayout>
   );
 }

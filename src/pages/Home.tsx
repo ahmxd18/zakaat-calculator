@@ -55,7 +55,7 @@ export function Home() {
       >
         {/* Background pattern */}
         <div
-          className="pointer-events-none absolute inset-0 opacity-[0.035]"
+          className="pointer-events-none absolute inset-0 opacity-[0.2]"
           style={{
             backgroundImage: "url(/images/hero-pattern.png)",
             backgroundSize: "320px 320px",
@@ -308,7 +308,7 @@ export function Home() {
               }}
             >
               <div
-                className="pointer-events-none absolute inset-0 opacity-[0.07]"
+                className="pointer-events-none absolute inset-0 opacity-[0.15]"
                 style={{
                   backgroundImage: "url(/images/hero-pattern.png)",
                   backgroundSize: "200px 200px",

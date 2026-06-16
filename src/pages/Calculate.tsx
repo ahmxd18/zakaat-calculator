@@ -1,9 +1,8 @@
 /**
  * Calculate.tsx
- * Zakaat calculation form — shell/layout only.
- * No calculation logic at this stage. Fields and structure are placeholder.
+ * Zakaat calculation form with live calculation engine.
  */
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Info, ChevronDown, RefreshCw, Calculator } from "lucide-react";
 import { CALCULATE } from "../constants/content";
@@ -12,9 +11,26 @@ import { Card }          from "../components/ui/Card";
 import { SectionHeader } from "../components/ui/SectionHeader";
 import { Container }     from "../components/layout/Container";
 import { RevealCard }    from "../components/ui/Card";
+import { PageLayout }    from "../components/layout/PageLayout";
+import { getCurrencySymbol } from "../utils/currency";
+import { calculateZakaat, type AssetValues, type NisaabPrices } from "../utils/zakaat";
 
 /** Individual number input field */
-function AssetField({ id, label, placeholder }: { id: string; label: string; placeholder: string }) {
+function AssetField({ 
+  id, 
+  label, 
+  placeholder, 
+  currencySymbol, 
+  value, 
+  onChange 
+}: { 
+  id: string; 
+  label: string; 
+  placeholder: string; 
+  currencySymbol: string;
+  value: number;
+  onChange: (value: number) => void;
+}) {
   return (
     <div className="space-y-1.5">
       <label
@@ -25,7 +41,7 @@ function AssetField({ id, label, placeholder }: { id: string; label: string; pla
       </label>
       <div className="relative">
         <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-charcoal-400 text-sm select-none">
-          £
+          {currencySymbol}
         </span>
         <input
           id={id}
@@ -33,6 +49,8 @@ function AssetField({ id, label, placeholder }: { id: string; label: string; pla
           min="0"
           step="0.01"
           placeholder={placeholder}
+          value={value || ""}
+          onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
           className="w-full rounded-xl border border-cream-300 bg-white pl-8 pr-4 py-3 text-sm text-charcoal-800 placeholder:text-charcoal-300 focus:outline-none focus:ring-2 focus:ring-sage-400 focus:border-transparent transition-shadow"
         />
       </div>
@@ -44,9 +62,15 @@ function AssetField({ id, label, placeholder }: { id: string; label: string; pla
 function AssetSection({
   section,
   index,
+  currencySymbol,
+  values,
+  onChange,
 }: {
   section: (typeof CALCULATE.sections)[number];
   index: number;
+  currencySymbol: string;
+  values: Record<string, number>;
+  onChange: (id: string, value: number) => void;
 }) {
   const [open, setOpen] = useState(index === 0); // first section open by default
 
@@ -93,6 +117,9 @@ function AssetSection({
                   id={field.id}
                   label={field.label}
                   placeholder={field.placeholder}
+                  currencySymbol={currencySymbol}
+                  value={values[field.id] || 0}
+                  onChange={(val) => onChange(field.id, val)}
                 />
               ))}
             </div>
@@ -103,11 +130,71 @@ function AssetSection({
   );
 }
 
+const STORAGE_KEY = "zakaat_calculator_data";
+
+function getInitialValues(): AssetValues {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      return JSON.parse(stored);
+    }
+  } catch {}
+  
+  return {
+    cash_on_hand: 0,
+    bank_savings: 0,
+    foreign_cash: 0,
+    gold_grams: 0,
+    silver_grams: 0,
+    stocks: 0,
+    crypto: 0,
+    pension: 0,
+    stock_inventory: 0,
+    receivables: 0,
+    debts_owed: 0,
+    bills_due: 0,
+  };
+}
+
 export function Calculate() {
   const [currency, setCurrency] = useState("GBP");
+  const [values, setValues] = useState<AssetValues>(getInitialValues);
+  
+  // Default Nisaab prices (user can override these in a real implementation)
+  const [nisaabPrices] = useState<NisaabPrices>({
+    goldPricePerGram: 50,   // Example: £50/gram
+    silverPricePerGram: 0.6, // Example: £0.60/gram
+  });
+  
+  // Persist to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(values));
+    } catch {}
+  }, [values]);
+  
+  // Calculate Zakaat in real-time
+  const result = useMemo(
+    () => calculateZakaat(values, nisaabPrices),
+    [values, nisaabPrices]
+  );
+  
+  const currencySymbol = getCurrencySymbol(currency);
+  
+  const handleFieldChange = (id: string, value: number) => {
+    setValues(prev => ({ ...prev, [id]: value }));
+  };
+  
+  const handleReset = () => {
+    setValues(getInitialValues());
+    localStorage.removeItem(STORAGE_KEY);
+  };
+  
+  const formatCurrency = (amount: number) => 
+    `${currencySymbol}${amount.toFixed(2)}`;
 
   return (
-    <main className="min-h-screen bg-cream-50 pt-20 pb-20">
+    <PageLayout>
       <Container>
         {/* ── Page header ── */}
         <div className="py-12 sm:py-16 text-center">
@@ -145,7 +232,14 @@ export function Calculate() {
 
             {/* Asset sections */}
             {CALCULATE.sections.map((section, i) => (
-              <AssetSection key={section.id} section={section} index={i} />
+              <AssetSection 
+                key={section.id} 
+                section={section} 
+                index={i}
+                currencySymbol={currencySymbol}
+                values={values}
+                onChange={handleFieldChange}
+              />
             ))}
 
             {/* Nisaab info note */}
@@ -160,19 +254,11 @@ export function Calculate() {
             <RevealCard delay={0.15}>
               <div className="flex flex-col sm:flex-row gap-3 pt-2">
                 <Button
-                  variant="primary"
-                  size="lg"
-                  fullWidth
-                  leftIcon={<Calculator className="h-5 w-5" />}
-                  type="button"
-                >
-                  {CALCULATE.calculateBtn}
-                </Button>
-                <Button
                   variant="ghost"
                   size="lg"
                   leftIcon={<RefreshCw className="h-4 w-4" />}
-                  type="reset"
+                  onClick={handleReset}
+                  type="button"
                 >
                   {CALCULATE.resetBtn}
                 </Button>
@@ -196,13 +282,13 @@ export function Calculate() {
                   </p>
                 </div>
 
-                {/* Placeholder summary rows */}
+                {/* Live summary rows */}
                 <div className="space-y-3">
                   {[
-                    { label: "Total Assets",      value: "—" },
-                    { label: "Total Deductions",  value: "—" },
-                    { label: "Net Zakatable Wealth", value: "—" },
-                    { label: "Nisaab Threshold",  value: "—" },
+                    { label: "Total Assets",      value: formatCurrency(result.totalAssets) },
+                    { label: "Total Deductions",  value: formatCurrency(result.totalDeductions) },
+                    { label: "Net Zakatable Wealth", value: formatCurrency(result.netZakaatableWealth) },
+                    { label: "Nisaab Threshold",  value: formatCurrency(result.nisaabThreshold) },
                   ].map(row => (
                     <div key={row.label} className="flex items-center justify-between py-2 border-b border-cream-100">
                       <span className="text-sm text-charcoal-500">{row.label}</span>
@@ -220,10 +306,12 @@ export function Calculate() {
                     className="text-4xl font-light text-cream-50"
                     style={{ fontFamily: "var(--font-display)" }}
                   >
-                    £0.00
+                    {formatCurrency(result.zakaatDue)}
                   </p>
                   <p className="text-xs text-sage-300">
-                    Fill in your assets to calculate
+                    {result.isBelowNisaab 
+                      ? "Below Nisaab threshold — no Zakaat due" 
+                      : "2.5% of your net zakatable wealth"}
                   </p>
                 </div>
 
@@ -240,6 +328,6 @@ export function Calculate() {
           </div>
         </div>
       </Container>
-    </main>
+    </PageLayout>
   );
 }

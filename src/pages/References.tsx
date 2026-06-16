@@ -5,10 +5,13 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { BookOpen, Scroll, Library, GraduationCap, Quote } from "lucide-react";
+import { Link } from "react-router-dom";
 import { REFERENCES } from "../constants/content";
 import { RevealCard }    from "../components/ui/Card";
 import { SectionHeader } from "../components/ui/SectionHeader";
 import { Container }     from "../components/layout/Container";
+import { PageLayout }    from "../components/layout/PageLayout";
+import { LAYOUT }        from "../constants/layout";
 
 type Category = (typeof REFERENCES.categories)[number];
 
@@ -71,7 +74,7 @@ export function References() {
   const activeCategory = REFERENCES.categories.find(c => c.id === activeId)!;
 
   return (
-    <main className="min-h-screen bg-cream-50 pt-20 pb-20">
+    <PageLayout>
 
       {/* ── Hero ── */}
       <section className="py-16 sm:py-24 bg-white border-b border-cream-200">
@@ -85,7 +88,7 @@ export function References() {
       </section>
 
       {/* ── Category tabs ── */}
-      <section className="py-6 bg-cream-50 border-b border-cream-200 sticky top-16 z-30">
+      <section className={`py-6 bg-cream-50 border-b border-cream-200 sticky ${LAYOUT.STICKY_TOP} z-30`}>
         <Container>
           <div className="flex items-center gap-2 overflow-x-auto pb-1">
             {REFERENCES.categories.map(cat => {
@@ -114,6 +117,13 @@ export function References() {
       {/* ── References grid ── */}
       <section className="py-12 sm:py-16">
         <Container>
+          {/* Verification disclaimer */}
+          <div className="mb-8 rounded-xl bg-blush-50 border border-blush-200 p-4">
+            <p className="text-xs text-blush-700 leading-relaxed">
+              ⚠️ <strong>Verification Notice:</strong> All Hadith citations (book and number) are pending scholarly verification against verified sources (e.g., sunnah.com). Do not rely on exact citation numbers until independently confirmed.
+            </p>
+          </div>
+          
           {/* Category heading */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -165,13 +175,13 @@ export function References() {
                 Our calculations follow the Hanafi school's use of the silver Nisaab as default, while providing optional switching to the gold standard. All rulings are cross-referenced across the four major schools of jurisprudence (Hanafi, Maliki, Shafi'i, Hanbali) and contemporary scholarly bodies.
               </p>
               <p className="text-xs text-charcoal-500">
-                Spot an error or have a scholarly correction? <a href="/contact" className="text-sage-400 underline hover:text-sage-300">Contact our Fiqh committee →</a>
+                Spot an error or have a scholarly correction? <Link to="/contact" className="text-sage-400 underline hover:text-sage-300">Contact our Fiqh committee →</Link>
               </p>
             </div>
           </RevealCard>
         </Container>
       </section>
 
-    </main>
+    </PageLayout>
   );
 }

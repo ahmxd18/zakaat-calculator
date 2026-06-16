@@ -8,6 +8,7 @@ import { ABOUT } from "../constants/content";
 import { Card, RevealCard } from "../components/ui/Card";
 import { SectionHeader }   from "../components/ui/SectionHeader";
 import { Container }       from "../components/layout/Container";
+import { PageLayout }      from "../components/layout/PageLayout";
 
 const ValueIcon: Record<string, React.FC<{ className?: string }>> = {
   "book-open":     ({ className }) => <BookOpen     className={className} />,
@@ -18,7 +19,7 @@ const ValueIcon: Record<string, React.FC<{ className?: string }>> = {
 
 export function About() {
   return (
-    <main className="min-h-screen bg-cream-50 pt-20 pb-20">
+    <PageLayout className="!pt-0">
 
       {/* ── Hero / Mission ── */}
       <section
@@ -26,7 +27,7 @@ export function About() {
         style={{ background: "linear-gradient(135deg, #3a6337 0%, #4a7d47 100%)" }}
       >
         <div
-          className="pointer-events-none absolute inset-0 opacity-[0.07]"
+          className="pointer-events-none absolute inset-0 opacity-[0.15]"
           style={{
             backgroundImage: "url(/images/hero-pattern.png)",
             backgroundSize: "240px 240px",
@@ -130,6 +131,13 @@ export function About() {
       {/* ── Team ── */}
       <section className="py-16 sm:py-24 bg-white">
         <Container>
+          {/* Placeholder warning */}
+          <div className="mb-8 rounded-xl bg-blush-50 border border-blush-200 p-4">
+            <p className="text-xs text-blush-700 leading-relaxed">
+              ⚠️ <strong>Placeholder Content:</strong> Team member information below is placeholder content pending real team details. Do not treat these as real individuals.
+            </p>
+          </div>
+          
           <SectionHeader
             eyebrow="The people behind it"
             heading="Meet the Team"
@@ -164,6 +172,6 @@ export function About() {
         </Container>
       </section>
 
-    </main>
+    </PageLayout>
   );
 }
