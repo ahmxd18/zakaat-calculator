@@ -1,6 +1,6 @@
 /**
  * NotFound.tsx
- * 404 fallback page.
+ * 404 fallback page with i18n support.
  */
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -8,9 +8,13 @@ import { Home, ArrowLeft } from "lucide-react";
 import { Button } from "../components/ui/Button";
 import { Container } from "../components/layout/Container";
 import { PageLayout } from "../components/layout/PageLayout";
+import { useT, useTranslation } from "../contexts/i18n";
+import { cn } from "../utils/cn";
 
 export function NotFound() {
   const navigate = useNavigate();
+  const t = useT();
+  const { direction } = useTranslation();
   
   return (
     <PageLayout className="flex items-center justify-center">
@@ -33,25 +37,25 @@ export function NotFound() {
               className="text-3xl font-light text-charcoal-800"
               style={{ fontFamily: "var(--font-display)" }}
             >
-              Page not found
+              {t.notFound.title}
             </h1>
             <p className="text-charcoal-500 text-base">
-              The page you're looking for doesn't exist or has been moved.
+              {t.notFound.description}
             </p>
           </div>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link to="/">
               <Button variant="primary" size="md" leftIcon={<Home className="h-4 w-4" />}>
-                Back to Home
+                {t.notFound.homeBtn}
               </Button>
             </Link>
             <Button 
               variant="ghost" 
               size="md" 
-              leftIcon={<ArrowLeft className="h-4 w-4" />}
+              leftIcon={<ArrowLeft className={cn("h-4 w-4", direction === 'rtl' && 'rotate-180')} />}
               onClick={() => navigate(-1)}
             >
-              Go Back
+              {t.notFound.backBtn}
             </Button>
           </div>
         </motion.div>

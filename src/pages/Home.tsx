@@ -8,7 +8,7 @@ import {
   Calculator, ShieldCheck, HeartHandshake,
   ArrowRight, Star, ChevronDown
 } from "lucide-react";
-import { HOME, NAV } from "../constants/content";
+import { useT } from "../contexts/i18n";
 import { Button }         from "../components/ui/Button";
 import { Card, RevealCard }        from "../components/ui/Card";
 import { SectionHeader }  from "../components/ui/SectionHeader";
@@ -40,6 +40,8 @@ function HeroItem({
 }
 
 export function Home() {
+  const t = useT();
+  
   return (
     <main className="overflow-hidden">
 
@@ -82,7 +84,7 @@ export function Home() {
             <HeroItem delay={0.1}>
               <span className="inline-flex items-center gap-2 rounded-full bg-sage-100 border border-sage-200 px-4 py-1.5 text-xs font-semibold text-sage-600 tracking-wider uppercase">
                 <Star className="h-3 w-3 fill-sage-400 text-sage-400" />
-                {HOME.hero.eyebrow}
+                {t.home.hero.eyebrow}
               </span>
             </HeroItem>
 
@@ -92,7 +94,7 @@ export function Home() {
                 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-light leading-[1.1] text-charcoal-800"
                 style={{ fontFamily: "var(--font-display)" }}
               >
-                {HOME.hero.heading.split("\n").map((line, i) => (
+                {t.home.hero.heading.split("\n").map((line, i) => (
                   <span key={i} className="block">
                     {i === 1
                       ? <span className="italic text-sage-600">{line}</span>
@@ -106,7 +108,7 @@ export function Home() {
             {/* Subheading */}
             <HeroItem delay={0.36}>
               <p className="max-w-2xl text-base sm:text-lg text-charcoal-500 leading-relaxed">
-                {HOME.hero.subheading}
+                {t.home.hero.subheading}
               </p>
             </HeroItem>
 
@@ -115,12 +117,12 @@ export function Home() {
               <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
                 <Link to="/calculate">
                   <Button variant="primary" size="lg" rightIcon={<ArrowRight className="h-5 w-5" />}>
-                    {HOME.hero.cta}
+                    {t.home.hero.cta}
                   </Button>
                 </Link>
                 <Link to="/faqs">
                   <Button variant="outline" size="lg">
-                    {HOME.hero.secondaryCta}
+                    {t.home.hero.secondaryCta}
                   </Button>
                 </Link>
               </div>
@@ -130,10 +132,10 @@ export function Home() {
             <HeroItem delay={0.62}>
               <div className="mt-2 max-w-xl rounded-2xl bg-white/70 backdrop-blur-sm border border-cream-200 px-6 py-5 shadow-sm">
                 <p className="text-sm sm:text-base text-charcoal-600 leading-relaxed italic">
-                  {HOME.hero.verse}
+                  {t.home.hero.verse}
                 </p>
                 <p className="mt-2 text-xs font-semibold text-sage-500 uppercase tracking-widest">
-                  {HOME.hero.verseRef}
+                  {t.home.hero.verseRef}
                 </p>
               </div>
             </HeroItem>
@@ -164,7 +166,12 @@ export function Home() {
       <section className="bg-sage-600 py-10">
         <Container>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-            {HOME.stats.map((stat, i) => (
+            {[
+              { value: t.home.stats.rate.value, label: t.home.stats.rate.label },
+              { value: t.home.stats.gold.value, label: t.home.stats.gold.label },
+              { value: t.home.stats.silver.value, label: t.home.stats.silver.label },
+              { value: t.home.stats.share.value, label: t.home.stats.share.label },
+            ].map((stat, i) => (
               <motion.div
                 key={stat.label}
                 initial={{ opacity: 0, y: 20 }}
@@ -197,15 +204,15 @@ export function Home() {
             {/* Text */}
             <div className="space-y-6">
               <SectionHeader
-                eyebrow="The Third Pillar"
-                heading={HOME.intro.heading}
-                subheading={HOME.intro.body}
+                eyebrow={t.home.intro.eyebrow}
+                heading={t.home.intro.heading}
+                subheading={t.home.intro.body}
                 align="left"
               />
               <RevealCard delay={0.2}>
                 <Link to="/calculate">
                   <Button variant="primary" size="md" rightIcon={<ArrowRight className="h-4 w-4" />}>
-                    Start Calculating
+                    {t.home.intro.cta}
                   </Button>
                 </Link>
               </RevealCard>
@@ -231,15 +238,15 @@ export function Home() {
                       className="text-3xl font-light text-charcoal-700"
                       style={{ fontFamily: "var(--font-display)" }}
                     >
-                      زَكَاة
+                      {t.home.zakaat.arabic}
                     </div>
                     <p className="text-sm text-charcoal-500">
-                      From the Arabic root <em>zakā</em> — meaning{" "}
-                      <strong className="text-sage-600">purity, growth, and blessing</strong>
+                      {t.home.zakaat.meaning} <em>{t.home.zakaat.root}</em> — {t.home.zakaat.meaningConnector}{" "}
+                      <strong className="text-sage-600">{t.home.zakaat.definition}</strong>
                     </p>
                   </div>
                   <div className="flex flex-wrap justify-center gap-2">
-                    {["2.5% rate", "85g gold Nisaab", "595g silver Nisaab"].map(label => (
+                    {[t.home.zakaat.badges.rate, t.home.zakaat.badges.goldNisaab, t.home.zakaat.badges.silverNisaab].map(label => (
                       <span
                         key={label}
                         className="rounded-full bg-sage-100 border border-sage-200 px-3 py-1 text-xs font-medium text-sage-700"
@@ -261,13 +268,17 @@ export function Home() {
       <section className="py-20 sm:py-28 bg-white">
         <Container>
           <SectionHeader
-            eyebrow="Why use our calculator"
-            heading="Clarity for a Sacred Obligation"
-            subheading="We've combined scholarly research with modern UX to make Zakaat calculation as clear and easy as possible."
+            eyebrow={t.home.features.eyebrow}
+            heading={t.home.features.heading}
+            subheading={t.home.features.subheading}
             className="mb-14"
           />
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {HOME.features.map((feat, i) => {
+            {[
+              { icon: "calculator", title: t.home.features.accurate.title, description: t.home.features.accurate.description },
+              { icon: "shield-check", title: t.home.features.scholarly.title, description: t.home.features.scholarly.description },
+              { icon: "heart-handshake", title: t.home.features.easy.title, description: t.home.features.easy.description },
+            ].map((feat, i) => {
               const Icon = FeatureIcon[feat.icon];
               return (
                 <RevealCard key={feat.title} delay={i * 0.12}>
@@ -320,10 +331,10 @@ export function Home() {
                   className="text-3xl sm:text-5xl font-light text-cream-50 leading-tight"
                   style={{ fontFamily: "var(--font-display)" }}
                 >
-                  Ready to calculate your Zakaat?
+                  {t.home.ctaBanner.heading}
                 </h2>
                 <p className="text-sage-200 text-base sm:text-lg leading-relaxed">
-                  It takes only a few minutes. Enter your assets, and we'll calculate exactly what you owe.
+                  {t.home.ctaBanner.subheading}
                 </p>
                 <Link to="/calculate">
                   <Button
@@ -332,7 +343,7 @@ export function Home() {
                     className="bg-cream-50 text-sage-700 hover:bg-white shadow-xl"
                     rightIcon={<ArrowRight className="h-5 w-5" />}
                   >
-                    {NAV.ctaLabel}
+                    {t.nav.ctaLabel}
                   </Button>
                 </Link>
               </div>

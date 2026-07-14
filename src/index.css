@@ -5,6 +5,8 @@
   /* Fonts */
   --font-display: "Cormorant Garamond", Georgia, serif;
   --font-body: "Inter", system-ui, sans-serif;
+  --font-arabic: "Amiri", "Traditional Arabic", "Noto Naskh Arabic", serif;
+  --font-urdu: "Noto Nastaliq Urdu", "Jameel Noori Nastaleeq", serif;
 
   /* Color Palette */
   --color-cream-50:  #fdfaf5;
@@ -63,6 +65,15 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100dvh;
+}
+
+/* RTL language-specific fonts */
+[lang="ar"], [lang="ar"] * {
+  font-family: var(--font-arabic), var(--font-body);
+}
+
+[lang="ur"], [lang="ur"] * {
+  font-family: var(--font-urdu), var(--font-body);
 }
 
 /* Display font helper */

@@ -5,7 +5,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, MapPin, Clock, Send, CheckCircle2, Info } from "lucide-react";
-import { CONTACT } from "../constants/content";
+import { useT } from "../contexts/i18n";
+import { INVARIANT_CONSTANTS } from "../constants/invariants";
 import { Button }        from "../components/ui/Button";
 import { Card, RevealCard }        from "../components/ui/Card";
 import { SectionHeader } from "../components/ui/SectionHeader";
@@ -19,8 +20,24 @@ const ContactInfoIcon: Record<string, React.FC<{ className?: string }>> = {
 };
 
 export function Contact() {
+  const t = useT();
   const [submitted, setSubmitted] = useState(false);
   const [formDisabled] = useState(true); // No backend yet
+  
+  const contactInfo = [
+    { icon: "mail", label: t.contact.info.email, value: INVARIANT_CONSTANTS.contact.email },
+    { icon: "map-pin", label: t.contact.info.location, value: INVARIANT_CONSTANTS.contact.location },
+    { icon: "clock", label: t.contact.info.response, value: INVARIANT_CONSTANTS.contact.responseTime },
+  ];
+  
+  const subjectOptions = [
+    t.contact.form.subjectOptions.general,
+    t.contact.form.subjectOptions.calculation,
+    t.contact.form.subjectOptions.scholarly,
+    t.contact.form.subjectOptions.technical,
+    t.contact.form.subjectOptions.partnership,
+    t.contact.form.subjectOptions.other,
+  ];
 
   // Placeholder submit handler — disabled until backend ready
   const handleSubmit = (e: React.FormEvent) => {
@@ -35,9 +52,9 @@ export function Contact() {
       <section className="py-16 sm:py-24 bg-white border-b border-cream-200">
         <Container className="text-center">
           <SectionHeader
-            eyebrow="Get in Touch"
-            heading={CONTACT.heading}
-            subheading={CONTACT.subheading}
+            eyebrow={t.contact.eyebrow}
+            heading={t.contact.heading}
+            subheading={t.contact.subheading}
           />
         </Container>
       </section>
@@ -54,10 +71,10 @@ export function Contact() {
                   className="text-xl font-medium text-charcoal-800 mb-5"
                   style={{ fontFamily: "var(--font-display)" }}
                 >
-                  Contact Information
+                  {t.contact.contactInfoTitle}
                 </h3>
                 <div className="space-y-5">
-                  {CONTACT.info.map((item, i) => {
+                  {contactInfo.map((item, i) => {
                     const Icon = ContactInfoIcon[item.icon];
                     return (
                       <motion.div
@@ -88,9 +105,9 @@ export function Contact() {
               {/* Scholarly queries note */}
               <RevealCard delay={0.1}>
                 <Card padding="md" className="bg-sage-50 border-sage-200 space-y-2">
-                  <p className="text-sm font-semibold text-sage-700">🕌 Scholarly Queries</p>
+                  <p className="text-sm font-semibold text-sage-700">{t.contact.scholarlyNote}</p>
                   <p className="text-xs text-sage-600 leading-relaxed">
-                    For detailed Fiqh questions or corrections to our methodology, please mention "Scholarly Query" in the subject field and we'll route your message to our Fiqh committee.
+                    {t.contact.scholarlyNoteText}
                   </p>
                 </Card>
               </RevealCard>
@@ -100,13 +117,12 @@ export function Contact() {
             <div className="lg:col-span-2">
               <RevealCard delay={0.15}>
                 <Card padding="lg">
-                  {/* Coming soon banner */}
                   <div className="mb-6 rounded-xl bg-blush-50 border border-blush-200 p-4 flex items-start gap-3">
                     <Info className="h-5 w-5 text-blush-500 shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-sm font-semibold text-blush-700">Form Coming Soon</p>
+                      <p className="text-sm font-semibold text-blush-700">{t.contact.form.formComingSoonTitle}</p>
                       <p className="text-xs text-blush-600 mt-0.5">
-                        This contact form is not yet connected to a backend service. Please reach out via email directly at {CONTACT.info[0].value}
+                        {t.contact.form.formComingSoonText} {INVARIANT_CONSTANTS.contact.email}
                       </p>
                     </div>
                   </div>
@@ -134,61 +150,58 @@ export function Contact() {
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-1.5">
                           <label className="block text-sm font-medium text-charcoal-700" htmlFor="name">
-                            Full Name <span className="text-blush-400">*</span>
+                            {t.contact.form.nameLabel} <span className="text-blush-400">{t.contact.form.required}</span>
                           </label>
                           <input
                             id="name"
                             type="text"
                             required
-                            placeholder={CONTACT.form.namePlaceholder}
+                            placeholder={t.contact.form.namePlaceholder}
                             className="w-full rounded-xl border border-cream-300 bg-cream-50 px-4 py-3 text-sm text-charcoal-800 placeholder:text-charcoal-300 focus:outline-none focus:ring-2 focus:ring-sage-400 focus:bg-white transition-all"
                           />
                         </div>
                         <div className="space-y-1.5">
                           <label className="block text-sm font-medium text-charcoal-700" htmlFor="email">
-                            Email Address <span className="text-blush-400">*</span>
+                            {t.contact.form.emailLabel} <span className="text-blush-400">{t.contact.form.required}</span>
                           </label>
                           <input
                             id="email"
                             type="email"
                             required
-                            placeholder={CONTACT.form.emailPlaceholder}
+                            placeholder={t.contact.form.emailPlaceholder}
                             className="w-full rounded-xl border border-cream-300 bg-cream-50 px-4 py-3 text-sm text-charcoal-800 placeholder:text-charcoal-300 focus:outline-none focus:ring-2 focus:ring-sage-400 focus:bg-white transition-all"
                           />
                         </div>
                       </div>
 
-                      {/* Subject */}
                       <div className="space-y-1.5">
                         <label className="block text-sm font-medium text-charcoal-700" htmlFor="subject">
-                          Subject
+                          {t.contact.form.subjectLabel}
                         </label>
                         <select
                           id="subject"
                           className="w-full rounded-xl border border-cream-300 bg-cream-50 px-4 py-3 text-sm text-charcoal-800 focus:outline-none focus:ring-2 focus:ring-sage-400 focus:bg-white transition-all"
                         >
-                          <option value="" disabled>Select a subject…</option>
-                          {CONTACT.form.subjectOptions.map(opt => (
+                          <option value="" disabled>{t.contact.form.subjectPlaceholder}</option>
+                          {subjectOptions.map(opt => (
                             <option key={opt} value={opt}>{opt}</option>
                           ))}
                         </select>
                       </div>
 
-                      {/* Message */}
                       <div className="space-y-1.5">
                         <label className="block text-sm font-medium text-charcoal-700" htmlFor="message">
-                          Message <span className="text-blush-400">*</span>
+                          {t.contact.form.messageLabel} <span className="text-blush-400">{t.contact.form.required}</span>
                         </label>
                         <textarea
                           id="message"
                           required
                           rows={6}
-                          placeholder={CONTACT.form.messagePlaceholder}
+                          placeholder={t.contact.form.messagePlaceholder}
                           className="w-full rounded-xl border border-cream-300 bg-cream-50 px-4 py-3 text-sm text-charcoal-800 placeholder:text-charcoal-300 focus:outline-none focus:ring-2 focus:ring-sage-400 focus:bg-white transition-all resize-none"
                         />
                       </div>
 
-                      {/* Submit */}
                       <Button
                         type="submit"
                         variant="primary"
@@ -197,11 +210,11 @@ export function Contact() {
                         disabled={formDisabled}
                         rightIcon={<Send className="h-4 w-4" />}
                       >
-                        {CONTACT.form.submitLabel}
+                        {t.contact.form.submitLabel}
                       </Button>
 
                       <p className="text-xs text-charcoal-400 text-center">
-                        Form currently disabled — email us directly instead.
+                        {t.contact.form.disabledNotice}
                       </p>
                     </form>
                   )}

@@ -4,7 +4,7 @@
  */
 import { motion } from "framer-motion";
 import { BookOpen, Globe2, Shield, Accessibility } from "lucide-react";
-import { ABOUT } from "../constants/content";
+import { useT } from "../contexts/i18n";
 import { Card, RevealCard } from "../components/ui/Card";
 import { SectionHeader }   from "../components/ui/SectionHeader";
 import { Container }       from "../components/layout/Container";
@@ -18,6 +18,15 @@ const ValueIcon: Record<string, React.FC<{ className?: string }>> = {
 };
 
 export function About() {
+  const t = useT();
+  
+  const teamMembers = [
+    { name: "Dr. Ahmad Al-Rashid", role: "Islamic Scholar", initials: "AR" },
+    { name: "Sarah Khan", role: "Lead Developer", initials: "SK" },
+    { name: "Yusuf Ibrahim", role: "UI/UX Designer", initials: "YI" },
+    { name: "Fatima Zahra", role: "Content Writer", initials: "FZ" },
+  ];
+  
   return (
     <PageLayout className="!pt-0">
 
@@ -45,16 +54,16 @@ export function About() {
             className="space-y-6"
           >
             <span className="inline-block text-xs font-semibold uppercase tracking-[0.15em] text-sage-300 mb-2">
-              Our Purpose
+              {t.about.eyebrow}
             </span>
             <h1
               className="text-4xl sm:text-6xl font-light text-cream-50 leading-tight"
               style={{ fontFamily: "var(--font-display)" }}
             >
-              {ABOUT.heading}
+              {t.about.heading}
             </h1>
             <p className="text-lg text-sage-200 leading-relaxed max-w-2xl mx-auto">
-              {ABOUT.subheading}
+              {t.about.subheading}
             </p>
           </motion.div>
         </Container>
@@ -74,9 +83,9 @@ export function About() {
                   className="text-2xl font-light text-charcoal-800"
                   style={{ fontFamily: "var(--font-display)" }}
                 >
-                  Our Mission
+                  {t.about.missionTitle}
                 </h2>
-                <p className="text-charcoal-500 leading-relaxed">{ABOUT.mission}</p>
+                <p className="text-charcoal-500 leading-relaxed">{t.about.mission}</p>
               </div>
             </RevealCard>
 
@@ -90,9 +99,9 @@ export function About() {
                   className="text-2xl font-light text-charcoal-800"
                   style={{ fontFamily: "var(--font-display)" }}
                 >
-                  Our Vision
+                  {t.about.visionTitle}
                 </h2>
-                <p className="text-charcoal-500 leading-relaxed">{ABOUT.vision}</p>
+                <p className="text-charcoal-500 leading-relaxed">{t.about.vision}</p>
               </div>
             </RevealCard>
           </div>
@@ -103,12 +112,17 @@ export function About() {
       <section className="py-16 sm:py-24 bg-cream-50">
         <Container>
           <SectionHeader
-            eyebrow="What guides us"
-            heading="Our Core Values"
+            eyebrow={t.about.valuesEyebrow}
+            heading={t.about.valuesHeading}
             className="mb-12"
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {ABOUT.values.map((val, i) => {
+            {[
+              { icon: "book-open", title: t.about.values.scholarly.title, description: t.about.values.scholarly.description },
+              { icon: "accessibility", title: t.about.values.accessibility.title, description: t.about.values.accessibility.description },
+              { icon: "shield", title: t.about.values.trust.title, description: t.about.values.trust.description },
+              { icon: "globe-2", title: t.about.values.global.title, description: t.about.values.global.description },
+            ].map((val, i) => {
               const Icon = ValueIcon[val.icon];
               return (
                 <RevealCard key={val.title} delay={i * 0.1}>
@@ -134,18 +148,18 @@ export function About() {
           {/* Placeholder warning */}
           <div className="mb-8 rounded-xl bg-blush-50 border border-blush-200 p-4">
             <p className="text-xs text-blush-700 leading-relaxed">
-              ⚠️ <strong>Placeholder Content:</strong> Team member information below is placeholder content pending real team details. Do not treat these as real individuals.
+              {t.about.teamPlaceholderWarning}
             </p>
           </div>
           
           <SectionHeader
-            eyebrow="The people behind it"
-            heading="Meet the Team"
-            subheading="A cross-disciplinary group of scholars, developers, and designers united by a shared purpose."
+            eyebrow={t.about.teamEyebrow}
+            heading={t.about.teamHeading}
+            subheading={t.about.teamSubheading}
             className="mb-12"
           />
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
-            {ABOUT.team.map((member, i) => (
+            {teamMembers.map((member, i) => (
               <RevealCard key={member.name} delay={i * 0.08}>
                 <Card hover padding="md" className="text-center space-y-3">
                   {/* Avatar initials */}
@@ -167,7 +181,7 @@ export function About() {
       <section className="py-10 bg-cream-100 border-t border-cream-200">
         <Container narrow>
           <p className="text-xs text-charcoal-400 text-center leading-relaxed">
-            ⚠️ This calculator is provided for educational purposes only. All rulings are based on mainstream scholarly positions. For personal Zakaat queries, please consult a qualified Islamic scholar.
+            {t.about.disclaimerWarning}
           </p>
         </Container>
       </section>

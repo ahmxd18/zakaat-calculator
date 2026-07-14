@@ -6,14 +6,24 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { BookOpen, Scroll, Library, GraduationCap, Quote } from "lucide-react";
 import { Link } from "react-router-dom";
-import { REFERENCES } from "../constants/content";
+import { useT } from "../contexts/i18n";
 import { RevealCard }    from "../components/ui/Card";
 import { SectionHeader } from "../components/ui/SectionHeader";
 import { Container }     from "../components/layout/Container";
 import { PageLayout }    from "../components/layout/PageLayout";
 import { LAYOUT }        from "../constants/layout";
 
-type Category = (typeof REFERENCES.categories)[number];
+type Category = {
+  id: string;
+  label: string;
+  icon: string;
+  refs: Array<{
+    ref: string;
+    text: string;
+    arabic?: string;
+    note?: string;
+  }>;
+};
 
 const CategoryIcon: Record<string, React.FC<{ className?: string }>> = {
   book:             ({ className }) => <BookOpen      className={className} />,
@@ -69,9 +79,50 @@ function ReferenceCard({
 }
 
 export function References() {
-  const [activeId, setActiveId] = useState<string>(REFERENCES.categories[0].id);
+  const t = useT();
+  
+  const categories: Category[] = [
+    {
+      id: "quran",
+      label: t.references.categories.quran,
+      icon: "book",
+      refs: [
+        { ref: "Qur'an 2:110", text: "And establish prayer and give Zakah, and whatever good you put forward for yourselves — you will find it with Allah.", arabic: "وَأَقِيمُوا ٱلصَّلوٰةَ وَءَاتُوا ٱلزَّكوٰةَ" },
+        { ref: "Qur'an 9:60", text: "Zakah expenditures are only for the poor, the needy, those employed to collect [Zakah], for bringing hearts together [for Islam], for freeing captives, for those in debt, for the cause of Allah, and for the [stranded] traveler.", arabic: "إِنَّمَا ٱلصَّدَقـٰتُ لِلْفُقَرَآءِ وَٱلْمَسـٰكِينِ" },
+      ],
+    },
+    {
+      id: "hadith",
+      label: t.references.categories.hadith,
+      icon: "scroll",
+      refs: [
+        { ref: "Sahih al-Bukhari 1395", text: "Islam is built on five pillars: testifying that there is no god but Allah and Muhammad is His Messenger, establishing prayer, giving Zakah, fasting Ramadan, and pilgrimage to the House.", note: "Hadith numbers pending verification" },
+        { ref: "Sahih Muslim 987", text: "On every 40 sheep, there is one sheep [due in Zakah]. On every 5 camels, there is one sheep [due in Zakah].", note: "Hadith numbers pending verification" },
+      ],
+    },
+    {
+      id: "fiqh",
+      label: t.references.categories.fiqh,
+      icon: "library",
+      refs: [
+        { ref: "Al-Hidayah (Hanafi)", text: "The Nisaab for gold is 20 Dinars (approximately 85 grams). For silver, it is 200 Dirhams (approximately 595 grams). Zakah is due at 2.5% on wealth above this threshold held for one lunar year." },
+        { ref: "Reliance of the Traveller (Shafi'i)", text: "Zakah on trade goods is calculated based on their current market value at the end of the Hawl, regardless of original purchase price." },
+      ],
+    },
+    {
+      id: "contemporary",
+      label: t.references.categories.contemporary,
+      icon: "graduation-cap",
+      refs: [
+        { ref: "AAOIFI Shari'ah Standards", text: "Contemporary Islamic finance institutions follow AAOIFI standards for calculating Zakah on investment funds, which require purifying returns from impermissible income sources." },
+        { ref: "Islamic Fiqh Council (OIC)", text: "The Council has ruled that cryptocurrency is subject to Zakah as it falls under the category of trade assets, with Zakah due at 2.5% of market value." },
+      ],
+    },
+  ];
+  
+  const [activeId, setActiveId] = useState<string>(categories[0].id);
 
-  const activeCategory = REFERENCES.categories.find(c => c.id === activeId)!;
+  const activeCategory = categories.find(c => c.id === activeId)!;
 
   return (
     <PageLayout>
@@ -80,9 +131,9 @@ export function References() {
       <section className="py-16 sm:py-24 bg-white border-b border-cream-200">
         <Container className="text-center">
           <SectionHeader
-            eyebrow="Scholarly Sources"
-            heading={REFERENCES.heading}
-            subheading={REFERENCES.subheading}
+            eyebrow={t.references.eyebrow}
+            heading={t.references.heading}
+            subheading={t.references.subheading}
           />
         </Container>
       </section>
@@ -91,7 +142,7 @@ export function References() {
       <section className={`py-6 bg-cream-50 border-b border-cream-200 sticky ${LAYOUT.STICKY_TOP} z-30`}>
         <Container>
           <div className="flex items-center gap-2 overflow-x-auto pb-1">
-            {REFERENCES.categories.map(cat => {
+            {categories.map(cat => {
               const Icon = CategoryIcon[cat.icon];
               const isActive = activeId === cat.id;
               return (
@@ -120,7 +171,7 @@ export function References() {
           {/* Verification disclaimer */}
           <div className="mb-8 rounded-xl bg-blush-50 border border-blush-200 p-4">
             <p className="text-xs text-blush-700 leading-relaxed">
-              ⚠️ <strong>Verification Notice:</strong> All Hadith citations (book and number) are pending scholarly verification against verified sources (e.g., sunnah.com). Do not rely on exact citation numbers until independently confirmed.
+              {t.references.verificationWarning}
             </p>
           </div>
           
@@ -169,13 +220,13 @@ export function References() {
                 className="text-2xl font-light text-cream-50"
                 style={{ fontFamily: "var(--font-display)" }}
               >
-                Our Methodology
+                {t.references.methodologyHeading}
               </h3>
               <p className="text-sm text-charcoal-300 leading-relaxed max-w-lg mx-auto">
-                Our calculations follow the Hanafi school's use of the silver Nisaab as default, while providing optional switching to the gold standard. All rulings are cross-referenced across the four major schools of jurisprudence (Hanafi, Maliki, Shafi'i, Hanbali) and contemporary scholarly bodies.
+                {t.references.methodologyText}
               </p>
               <p className="text-xs text-charcoal-500">
-                Spot an error or have a scholarly correction? <Link to="/contact" className="text-sage-400 underline hover:text-sage-300">Contact our Fiqh committee →</Link>
+                {t.references.methodologyLink} <Link to="/contact" className="text-sage-400 underline hover:text-sage-300">{t.references.methodologyLinkText}</Link>
               </p>
             </div>
           </RevealCard>

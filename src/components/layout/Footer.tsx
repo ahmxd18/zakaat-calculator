@@ -1,13 +1,14 @@
 /**
  * Footer.tsx
- * Shared page footer with brand, quick links, social icons, and disclaimer.
+ * Shared page footer with brand, quick links, social icons, and disclaimer with i18n support.
  * Note: Lucide removed brand icons (Twitter/Instagram/etc.) so we use inline SVGs.
  */
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Moon, Heart } from "lucide-react";
-import { FOOTER, NAV } from "../../constants/content";
 import { Container } from "./Container";
+import { useT } from "../../contexts/i18n";
+import { INVARIANT_CONSTANTS } from "../../constants/invariants";
 
 // Simple inline SVG social icons (brand-safe, no dependency on lucide brand icons)
 const SocialIcons: Record<string, React.FC<{ className?: string }>> = {
@@ -34,6 +35,23 @@ const SocialIcons: Record<string, React.FC<{ className?: string }>> = {
 };
 
 export function Footer() {
+  const t = useT();
+  
+  const socialLinks = [
+    { label: 'Twitter', href: INVARIANT_CONSTANTS.social.twitter, icon: 'twitter' },
+    { label: 'Instagram', href: INVARIANT_CONSTANTS.social.instagram, icon: 'instagram' },
+    { label: 'Facebook', href: INVARIANT_CONSTANTS.social.facebook, icon: 'facebook' },
+    { label: 'YouTube', href: INVARIANT_CONSTANTS.social.youtube, icon: 'youtube' },
+  ];
+  
+  const quickLinks = [
+    { label: t.nav.links.calculate, path: '/calculate' },
+    { label: t.nav.links.faqs, path: '/faqs' },
+    { label: t.nav.links.references, path: '/references' },
+    { label: t.nav.links.about, path: '/about' },
+    { label: t.nav.links.contact, path: '/contact' },
+    { label: t.nav.links.donate, path: '/donate' },
+  ];
   return (
     <footer className="bg-charcoal-800 text-cream-200">
       {/* ── Top ornamental stripe ── */}
@@ -52,16 +70,16 @@ export function Footer() {
                 className="text-xl font-semibold text-cream-50"
                 style={{ fontFamily: "var(--font-display)" }}
               >
-                {NAV.brand}
+                {t.nav.brand}
               </span>
             </Link>
             <p className="text-sm text-charcoal-300 leading-relaxed max-w-xs">
-              {FOOTER.tagline}
+              {t.footer.tagline}
             </p>
 
             {/* Social links */}
             <div className="flex items-center gap-2 pt-1">
-              {FOOTER.socialLinks.map(social => {
+              {socialLinks.map(social => {
                 const Icon = SocialIcons[social.icon];
                 return (
                   <motion.a
@@ -82,10 +100,10 @@ export function Footer() {
           {/* ── Quick links ── */}
           <div className="space-y-4">
             <h3 className="text-xs font-semibold uppercase tracking-widest text-charcoal-400">
-              Quick Links
+              {t.footer.quickLinksTitle}
             </h3>
             <ul className="space-y-2.5">
-              {FOOTER.quickLinks.map(link => (
+              {quickLinks.map(link => (
                 <li key={link.path}>
                   <Link
                     to={link.path}
@@ -101,10 +119,10 @@ export function Footer() {
           {/* ── Disclaimer ── */}
           <div className="space-y-4">
             <h3 className="text-xs font-semibold uppercase tracking-widest text-charcoal-400">
-              Disclaimer
+              {t.footer.disclaimerTitle}
             </h3>
             <p className="text-sm text-charcoal-400 leading-relaxed">
-              {FOOTER.disclaimer}
+              {t.footer.disclaimer}
             </p>
           </div>
 
@@ -113,10 +131,10 @@ export function Footer() {
         {/* ── Bottom bar ── */}
         <div className="mt-10 pt-8 border-t border-charcoal-700 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-charcoal-500">
-            {FOOTER.copyright}
+            © {INVARIANT_CONSTANTS.copyright.year} {INVARIANT_CONSTANTS.copyright.entity}. {t.footer.copyright}
           </p>
           <p className="text-xs text-charcoal-500 flex items-center gap-1">
-            Made with <Heart className="h-3 w-3 text-blush-400 fill-blush-400 mx-0.5" /> for the Ummah
+            {t.footer.madeWith} <Heart className="h-3 w-3 text-blush-400 fill-blush-400 mx-0.5" /> {t.footer.forUmmah}
           </p>
         </div>
       </Container>

@@ -5,7 +5,7 @@
 import { motion } from "framer-motion";
 import { HelpCircle, MessageSquare } from "lucide-react";
 import { Link } from "react-router-dom";
-import { FAQS } from "../constants/content";
+import { useT } from "../contexts/i18n";
 import { Accordion }     from "../components/ui/Accordion";
 import { SectionHeader } from "../components/ui/SectionHeader";
 import { Button }        from "../components/ui/Button";
@@ -13,6 +13,8 @@ import { Container }     from "../components/layout/Container";
 import { PageLayout }    from "../components/layout/PageLayout";
 
 export function FAQs() {
+  const t = useT();
+  
   return (
     <PageLayout className="!pt-0">
 
@@ -37,9 +39,9 @@ export function FAQs() {
           </motion.div>
 
           <SectionHeader
-            eyebrow="Knowledge Base"
-            heading={FAQS.heading}
-            subheading={FAQS.subheading}
+            eyebrow={t.faqs.knowledgeBase}
+            heading={t.faqs.heading}
+            subheading={t.faqs.subheading}
           />
         </Container>
       </section>
@@ -47,7 +49,7 @@ export function FAQs() {
       {/* ── Accordion ── */}
       <section className="py-10 sm:py-16">
         <Container narrow>
-          <Accordion items={FAQS.items} />
+          <Accordion items={t.faqs.items} />
         </Container>
       </section>
 
@@ -69,15 +71,15 @@ export function FAQs() {
                 className="text-2xl font-light text-charcoal-800"
                 style={{ fontFamily: "var(--font-display)" }}
               >
-                Still have a question?
+                {t.faqs.stillHaveQuestion}
               </h3>
               <p className="text-sm text-charcoal-500">
-                Our team and scholars are here to help. Reach out and we'll get back to you.
+                {t.faqs.stillHaveQuestionText}
               </p>
             </div>
             <Link to="/contact">
               <Button variant="primary" size="md">
-                Contact Us
+                {t.faqs.contactUs}
               </Button>
             </Link>
           </motion.div>

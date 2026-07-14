@@ -5,7 +5,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ExternalLink, CheckCircle, Globe } from "lucide-react";
-import { DONATE } from "../constants/content";
+import { useT } from "../contexts/i18n";
+import { CHARITIES, type CharityData } from "../constants/charities";
 import { Badge }         from "../components/ui/Badge";
 import { Button }        from "../components/ui/Button";
 import { RevealCard }    from "../components/ui/Card";
@@ -14,9 +15,11 @@ import { Container }     from "../components/layout/Container";
 import { PageLayout }    from "../components/layout/PageLayout";
 import { LAYOUT }        from "../constants/layout";
 
-type Charity = (typeof DONATE.charities)[number];
+type Charity = CharityData & {
+  category: string;
+};
 
-function CharityCard({ charity, index }: { charity: Charity; index: number }) {
+function CharityCard({ charity, index, donateLabel }: { charity: Charity; index: number; donateLabel: string }) {
   return (
     <RevealCard delay={index * 0.08}>
       <motion.div
@@ -83,7 +86,7 @@ function CharityCard({ charity, index }: { charity: Charity; index: number }) {
                 size="sm"
                 rightIcon={<ExternalLink className="h-3.5 w-3.5" />}
               >
-                Donate
+                {donateLabel}
               </Button>
             </a>
           </div>
@@ -94,12 +97,27 @@ function CharityCard({ charity, index }: { charity: Charity; index: number }) {
 }
 
 export function Donate() {
-  const [activeCategory, setActiveCategory] = useState("All");
-
+  const t = useT();
+  const [activeCategory, setActiveCategory] = useState(t.donate.categories.all);
+  
+  const categories = [
+    t.donate.categories.all,
+    t.donate.categories.emergencyRelief,
+    t.donate.categories.education,
+    t.donate.categories.foodWater,
+    t.donate.categories.orphans,
+    t.donate.categories.healthcare,
+  ];
+  
+  const charities: Charity[] = CHARITIES.map(charity => ({
+    ...charity,
+    category: t.donate.categories[charity.categoryKey],
+  }));
+  
   const filtered =
-    activeCategory === "All"
-      ? DONATE.charities
-      : DONATE.charities.filter(c => c.category === activeCategory);
+    activeCategory === t.donate.categories.all
+      ? charities
+      : charities.filter(c => c.category === activeCategory);
 
   return (
     <PageLayout>
@@ -112,9 +130,9 @@ export function Donate() {
         <div className="pointer-events-none absolute top-0 right-0 w-80 h-80 rounded-full bg-sage-100/50 -translate-y-1/2 translate-x-1/3 blur-3xl" />
         <Container className="text-center relative z-10">
           <SectionHeader
-            eyebrow="Zakaat Eligible Charities"
-            heading={DONATE.heading}
-            subheading={DONATE.subheading}
+            eyebrow={t.donate.eyebrow}
+            heading={t.donate.heading}
+            subheading={t.donate.subheading}
           />
 
           {/* Disclaimer note */}
@@ -125,7 +143,7 @@ export function Donate() {
             className="mt-6 inline-flex items-center gap-2 rounded-full bg-white border border-cream-200 px-4 py-2 text-xs text-charcoal-500 shadow-sm"
           >
             <CheckCircle className="h-3.5 w-3.5 text-sage-500 shrink-0" />
-            {DONATE.note}
+            {t.donate.note}
           </motion.div>
         </Container>
       </section>
@@ -134,8 +152,8 @@ export function Donate() {
       <section className={`py-8 bg-white border-b border-cream-200 sticky ${LAYOUT.STICKY_TOP} z-30 shadow-sm`}>
         <Container>
           <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
-            <span className="text-xs font-semibold text-charcoal-500 shrink-0 mr-1">Filter:</span>
-            {DONATE.categories.map(cat => (
+            <span className="text-xs font-semibold text-charcoal-500 shrink-0 mr-1">{t.donate.filterLabel}</span>
+            {categories.map(cat => (
               <motion.button
                 key={cat}
                 whileTap={{ scale: 0.95 }}
@@ -159,7 +177,7 @@ export function Donate() {
           {/* Disclaimer */}
           <div className="mb-8 rounded-xl bg-blush-50 border border-blush-200 p-4">
             <p className="text-xs text-blush-700 leading-relaxed">
-              ⚠️ <strong>Note:</strong> Listed charities are placeholder examples pending verification and partnership agreements. We do not endorse any organization until formal vetting is complete. Always verify charity credentials independently.
+              {t.donate.placeholderWarning}
             </p>
           </div>
           
@@ -173,7 +191,7 @@ export function Donate() {
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
             >
               {filtered.map((charity, i) => (
-                <CharityCard key={charity.id} charity={charity} index={i} />
+                <CharityCard key={charity.id} charity={charity} index={i} donateLabel={t.donate.donateBtn} />
               ))}
             </motion.div>
           </AnimatePresence>
@@ -185,8 +203,8 @@ export function Donate() {
               className="text-center py-16 text-charcoal-400"
             >
               <p className="text-4xl mb-3">🔍</p>
-              <p className="font-medium">No charities in this category yet.</p>
-              <p className="text-sm mt-1">Check back soon — we're adding more.</p>
+              <p className="font-medium">{t.donate.noResults}</p>
+              <p className="text-sm mt-1">{t.donate.noResultsSubtext}</p>
             </motion.div>
           )}
         </Container>
@@ -201,13 +219,13 @@ export function Donate() {
                 className="text-2xl font-light text-charcoal-800"
                 style={{ fontFamily: "var(--font-display)" }}
               >
-                Know a trusted Zakaat-eligible charity?
+                {t.donate.ctaHeading}
               </h3>
               <p className="text-sm text-charcoal-500">
-                We're always looking to expand our verified charity list. Suggest a charity for review.
+                {t.donate.ctaText}
               </p>
               <Button variant="outline" size="md">
-                Suggest a Charity
+                {t.donate.ctaBtn}
               </Button>
             </div>
           </RevealCard>

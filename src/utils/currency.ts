@@ -12,6 +12,8 @@ export const CURRENCY_SYMBOLS: Record<string, string> = {
   PKR: "₨",
   BDT: "৳",
   MYR: "RM",
+  INR: "₹",
+  IDR: "Rp",
 } as const;
 
 export function getCurrencySymbol(code: string): string {

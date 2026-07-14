@@ -12,11 +12,11 @@ export const NAV = {
   links: [
     { label: "Home",       path: "/" },
     { label: "Calculate",  path: "/calculate" },
-    { label: "FAQs",       path: "/faqs" },
-    { label: "About",      path: "/about" },
-    { label: "Contact",    path: "/contact" },
     { label: "Donate",     path: "/donate" },
+    { label: "About",      path: "/about" },
     { label: "References", path: "/references" },
+    { label: "Contact",    path: "/contact" },
+    { label: "FAQs",       path: "/faqs" },
   ],
   ctaLabel: "Calculate Now",
 } as const;
