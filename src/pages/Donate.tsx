@@ -4,7 +4,7 @@
  */
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ExternalLink, CheckCircle, Globe } from "lucide-react";
+import { ExternalLink, CheckCircle, Globe, Search } from "lucide-react";
 import { useT } from "../contexts/i18n";
 import { CHARITIES, type CharityData } from "../constants/charities";
 import { Badge }         from "../components/ui/Badge";
@@ -31,8 +31,8 @@ function CharityCard({ charity, index, donateLabel }: { charity: Charity; index:
         <div
           className={`h-1.5 w-full ${
             charity.accent === "sage"
-              ? "bg-gradient-to-r from-sage-400 to-sage-600"
-              : "bg-gradient-to-r from-blush-300 to-blush-500"
+              ? "bg-linear-to-r from-sage-400 to-sage-600"
+              : "bg-linear-to-r from-blush-300 to-blush-500"
           }`}
         />
 
@@ -98,7 +98,7 @@ function CharityCard({ charity, index, donateLabel }: { charity: Charity; index:
 
 export function Donate() {
   const t = useT();
-  const [activeCategory, setActiveCategory] = useState(t.donate.categories.all);
+  const [activeCategory, setActiveCategory] = useState<string>(t.donate.categories.all);
   
   const categories = [
     t.donate.categories.all,
@@ -202,7 +202,7 @@ export function Donate() {
               animate={{ opacity: 1 }}
               className="text-center py-16 text-charcoal-400"
             >
-              <p className="text-4xl mb-3">🔍</p>
+              <Search className="h-10 w-10 text-charcoal-300 mb-3 mx-auto" />
               <p className="font-medium">{t.donate.noResults}</p>
               <p className="text-sm mt-1">{t.donate.noResultsSubtext}</p>
             </motion.div>

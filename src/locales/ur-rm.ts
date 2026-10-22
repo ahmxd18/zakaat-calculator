@@ -103,7 +103,7 @@ export const urRm: Translations = {
     
     sections: {
       cash: {
-        label: "💰 Naqdi Aur Bank Bachat",
+        label: "Naqdi Aur Bank Bachat",
         description: "Haath mein naqdi, jaari accounts, bachat accounts.",
         fields: {
           cashOnHand: "Haath Mein Naqdi",
@@ -112,7 +112,7 @@ export const urRm: Translations = {
         },
       },
       goldSilver: {
-        label: "🪙 Sona Aur Chaandi",
+        label: "Sona Aur Chaandi",
         description: "Haqeeqi sona/chaandi aur bachat ke liye rakhe gaye zevar.",
         fields: {
           goldGrams: "Sona (grams)",
@@ -120,7 +120,7 @@ export const urRm: Translations = {
         },
       },
       investments: {
-        label: "📈 Sarmaayakari Aur Shares",
+        label: "Sarmaayakari Aur Shares",
         description: "Stocks, shares, sarmaayakari funds (zakaat wala hissa).",
         fields: {
           stocks: "Stocks Aur Shares",
@@ -129,7 +129,7 @@ export const urRm: Translations = {
         },
       },
       business: {
-        label: "🏪 Tijarat Ke Maal",
+        label: "Tijarat Ke Maal",
         description: "Farookht ke liye stock/maal, tijarat ke qarzay.",
         fields: {
           stockInventory: "Stock / Maal",
@@ -137,7 +137,7 @@ export const urRm: Translations = {
         },
       },
       deductions: {
-        label: "➖ Zimmedariyan Aur Katootiyan",
+        label: "Zimmedariyan Aur Katootiyan",
         description: "Mukhtasir muddat ke qarzay, qamri saal mein adaa hone wale bills.",
         fields: {
           debtsOwed: "Aap Par Qarz",
@@ -147,6 +147,29 @@ export const urRm: Translations = {
     },
     
     nisaabNote: "Nisaab sone (85g) ya chaandi (595g) ki kam qeemat se hisaab kiya jata hai. Hum bazaar ki qeemtein muntazim tor par update karte hain.",
+    
+    nisaabStandard: {
+      label: "Nisaab Ka Mayar",
+      note: "Ulamaa is mayar ke baare mein ikhtilaf rakhte hain. Apne madhab se mashwara karein.",
+      lower: "Kam (Hifazati)",
+      lowerDesc: "Sone ya chaandi mein se jo bhi kam qeemat ho — sabse zyada shamil",
+      gold: "Sona (85g)",
+      goldDesc: "Shafi'i aur Hanbali madhab ki tarjeeh",
+      silver: "Chaandi (595g)",
+      silverDesc: "Hanafi ka bunyadi mauqif — zyada wasee dayra",
+    },
+    
+    prices: {
+      liveLabel: "Nisaab Ki Zinda Qeemtein",
+      liveNote: "Har ghante bazaar ke data se update hoti hain",
+      goldPerGram: "Sona fی gram",
+      silverPerGram: "Chaandi fی gram",
+      loading: "Zinda qeemtein la raha hai…",
+      error: "Qeemtein load nahi ho sakeen — backup qeemtein istemal ho rahi hain",
+      fallbackNote: "Backup qeemtein istemal ho rahi hain. Zinda data dastiyab nahi.",
+      lastUpdated: "Aakhri update",
+      refresh: "Qeemtein refresh karein",
+    },
     
     summary: {
       title: "Aapka Zakaat Ka Khulasa",
@@ -286,6 +309,8 @@ export const urRm: Translations = {
       submitLabel: "Paigham Bhejein",
       disabledNotice: "Form abhi band hai — hamein seedha email karein.",
       privacyNotice: "Is form ko jama karke, aap hamari privacy policy se ittifaq karte hain. Hum kabhi aapka data share nahi karte.",
+      successTitle: "Paigham bhej diya gaya!",
+      successText: "Hum se rabta karne ka shukriya. Hum 2-3 karobaari dinon mein jawab dene ki koshish karte hain.",
       
       subjectOptions: {
         general: "Aam Istefsaar",
@@ -366,5 +391,6 @@ export const urRm: Translations = {
     open: "Kholein",
     search: "Talaash",
     placeholder: "—",
+    scroll: "Neeche Jaein",
   },
 };

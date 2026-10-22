@@ -4,7 +4,7 @@
  */
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen, Scroll, Library, GraduationCap, Quote } from "lucide-react";
+import { BookOpen, Scroll, Library, GraduationCap, Quote, StickyNote } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useT } from "../contexts/i18n";
 import { RevealCard }    from "../components/ui/Card";
@@ -69,8 +69,9 @@ function ReferenceCard({
 
         {/* Scholar note */}
         {refData.note && (
-          <p className="text-xs text-charcoal-400 leading-relaxed border-t border-cream-100 pt-3">
-            📝 {refData.note}
+          <p className="text-xs text-charcoal-400 leading-relaxed border-t border-cream-100 pt-3 flex items-start gap-1.5">
+            <StickyNote className="h-3.5 w-3.5 shrink-0 mt-0.5 text-charcoal-300" />
+            {refData.note}
           </p>
         )}
       </div>

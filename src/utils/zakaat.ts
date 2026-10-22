@@ -4,6 +4,7 @@
  */
 
 export interface AssetValues {
+  [key: string]: number;
   // Cash & Bank
   cash_on_hand: number;
   bank_savings: number;
@@ -45,15 +46,21 @@ const GOLD_NISAAB_GRAMS = 85;
 const SILVER_NISAAB_GRAMS = 595;
 const ZAKAAT_RATE = 0.025; // 2.5%
 
+export type NisaabStandard = "lower" | "gold" | "silver";
+
 /**
- * Calculate Nisaab threshold using the lower of gold or silver standard.
+ * Calculate Nisaab threshold using the chosen standard.
+ * - lower (default/Hanafi): whichever of gold or silver is worth less
+ * - gold (Shafi'i preferred): always use 85g gold value
+ * - silver (conservative): always use 595g silver value
  */
-export function calculateNisaab(prices: NisaabPrices): number {
+export function calculateNisaab(prices: NisaabPrices, standard: NisaabStandard = "lower"): number {
   const goldNisaab = GOLD_NISAAB_GRAMS * prices.goldPricePerGram;
   const silverNisaab = SILVER_NISAAB_GRAMS * prices.silverPricePerGram;
-  
-  // Use silver standard (lower value) as default per Hanafi methodology
-  return Math.min(goldNisaab, silverNisaab);
+
+  if (standard === "gold") return goldNisaab;
+  if (standard === "silver") return silverNisaab;
+  return Math.min(goldNisaab, silverNisaab); // "lower"
 }
 
 /**
@@ -96,12 +103,13 @@ export function calculateTotalDeductions(values: AssetValues): number {
  */
 export function calculateZakaat(
   values: AssetValues,
-  prices: NisaabPrices
+  prices: NisaabPrices,
+  standard: NisaabStandard = "lower",
 ): ZakaatResult {
   const totalAssets = calculateTotalAssets(values, prices);
   const totalDeductions = calculateTotalDeductions(values);
   const netZakaatableWealth = Math.max(0, totalAssets - totalDeductions);
-  const nisaabThreshold = calculateNisaab(prices);
+  const nisaabThreshold = calculateNisaab(prices, standard);
   
   const isBelowNisaab = netZakaatableWealth < nisaabThreshold;
   const zakaatDue = isBelowNisaab ? 0 : netZakaatableWealth * ZAKAAT_RATE;

@@ -101,7 +101,7 @@ export const en = {
     
     sections: {
       cash: {
-        label: "💰 Cash & Bank Savings",
+        label: "Cash & Bank Savings",
         description: "Cash in hand, current accounts, savings accounts.",
         fields: {
           cashOnHand: "Cash on Hand",
@@ -110,7 +110,7 @@ export const en = {
         },
       },
       goldSilver: {
-        label: "🪙 Gold & Silver",
+        label: "Gold & Silver",
         description: "Physical gold/silver and gold/silver jewellery held for saving.",
         fields: {
           goldGrams: "Gold (grams)",
@@ -118,7 +118,7 @@ export const en = {
         },
       },
       investments: {
-        label: "📈 Investments & Shares",
+        label: "Investments & Shares",
         description: "Stocks, shares, investment funds (zakatable portion).",
         fields: {
           stocks: "Stocks & Shares",
@@ -127,7 +127,7 @@ export const en = {
         },
       },
       business: {
-        label: "🏪 Business Assets",
+        label: "Business Assets",
         description: "Stock/inventory intended for sale, trade receivables.",
         fields: {
           stockInventory: "Stock / Inventory",
@@ -135,7 +135,7 @@ export const en = {
         },
       },
       deductions: {
-        label: "➖ Liabilities & Deductions",
+        label: "Liabilities & Deductions",
         description: "Short-term debts, bills due within the lunar year.",
         fields: {
           debtsOwed: "Debts You Owe",
@@ -145,6 +145,29 @@ export const en = {
     },
     
     nisaabNote: "Nisaab is calculated using the lower of gold (85g) or silver (595g) value. We update market prices regularly.",
+    
+    nisaabStandard: {
+      label: "Nisaab Standard",
+      note: "Scholars differ on which standard to apply. Consult your madhab.",
+      lower: "Lower (Conservative)",
+      lowerDesc: "Whichever of gold or silver is worth less — most inclusive",
+      gold: "Gold (85g)",
+      goldDesc: "Preferred by Shafi'i & Hanbali schools",
+      silver: "Silver (595g)",
+      silverDesc: "Default Hanafi position — broader coverage",
+    },
+    
+    prices: {
+      liveLabel: "Live Nisaab Prices",
+      liveNote: "Updated hourly from market data",
+      goldPerGram: "Gold per gram",
+      silverPerGram: "Silver per gram",
+      loading: "Fetching live prices…",
+      error: "Could not load prices — using fallback values",
+      fallbackNote: "Using fallback prices. Live data unavailable.",
+      lastUpdated: "Last updated",
+      refresh: "Refresh prices",
+    },
     
     summary: {
       title: "Your Zakaat Summary",
@@ -284,6 +307,8 @@ export const en = {
       submitLabel: "Send Message",
       disabledNotice: "Form currently disabled — email us directly instead.",
       privacyNotice: "By submitting this form, you agree to our privacy policy. We never share your data.",
+      successTitle: "Message sent!",
+      successText: "Thank you for reaching out. We aim to respond within 2–3 business days.",
       
       subjectOptions: {
         general: "General Enquiry",
@@ -364,6 +389,7 @@ export const en = {
     open: "Open",
     search: "Search",
     placeholder: "—",
+    scroll: "Scroll",
   },
 } as const;
 

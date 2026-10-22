@@ -103,7 +103,7 @@ export const ar: Translations = {
     
     sections: {
       cash: {
-        label: "💰 النقد والمدخرات",
+        label: "النقد والمدخرات",
         description: "نقد في اليد، حسابات جارية، حسابات توفير.",
         fields: {
           cashOnHand: "نقد في اليد",
@@ -112,7 +112,7 @@ export const ar: Translations = {
         },
       },
       goldSilver: {
-        label: "🪙 الذهب والفضة",
+        label: "الذهب والفضة",
         description: "ذهب وفضة مادية ومجوهرات محفوظة للادخار.",
         fields: {
           goldGrams: "ذهب (غرام)",
@@ -120,7 +120,7 @@ export const ar: Translations = {
         },
       },
       investments: {
-        label: "📈 الاستثمارات والأسهم",
+        label: "الاستثمارات والأسهم",
         description: "أسهم، أوراق مالية، صناديق استثمار (الجزء الخاضع للزكاة).",
         fields: {
           stocks: "أسهم وأوراق مالية",
@@ -129,7 +129,7 @@ export const ar: Translations = {
         },
       },
       business: {
-        label: "🏪 أصول تجارية",
+        label: "أصول تجارية",
         description: "مخزون / بضاعة للبيع، ذمم مدينة تجارية.",
         fields: {
           stockInventory: "مخزون / بضاعة",
@@ -137,7 +137,7 @@ export const ar: Translations = {
         },
       },
       deductions: {
-        label: "➖ الالتزامات والخصوم",
+        label: "الالتزامات والخصوم",
         description: "ديون قصيرة الأجل، فواتير مستحقة خلال السنة القمرية.",
         fields: {
           debtsOwed: "ديون عليك",
@@ -147,6 +147,29 @@ export const ar: Translations = {
     },
     
     nisaabNote: "يُحسب النصاب باستخدام الأقل من قيمة الذهب (85غ) أو الفضة (595غ). نحدث أسعار السوق بانتظام.",
+    
+    nisaabStandard: {
+      label: "معيار النصاب",
+      note: "يختلف العلماء في تحديد المعيار. استشر مذهبك.",
+      lower: "الأقل (الأحوط)",
+      lowerDesc: "أي الذهب أو الفضة أقل قيمة — الأوسع شمولاً",
+      gold: "الذهب (85غ)",
+      goldDesc: "مذهب الشافعية والحنابلة",
+      silver: "الفضة (595غ)",
+      silverDesc: "الموقف الحنفي الافتراضي — تغطية أوسع",
+    },
+    
+    prices: {
+      liveLabel: "أسعار النصاب المباشرة",
+      liveNote: "يُحدَّث كل ساعة من بيانات السوق",
+      goldPerGram: "الذهب للغرام",
+      silverPerGram: "الفضة للغرام",
+      loading: "جارٍ جلب الأسعار المباشرة…",
+      error: "تعذّر تحميل الأسعار — نستخدم قيماً احتياطية",
+      fallbackNote: "نستخدم أسعاراً احتياطية. البيانات المباشرة غير متوفرة.",
+      lastUpdated: "آخر تحديث",
+      refresh: "تحديث الأسعار",
+    },
     
     summary: {
       title: "ملخص زكاتك",
@@ -286,6 +309,8 @@ export const ar: Translations = {
       submitLabel: "إرسال الرسالة",
       disabledNotice: "النموذج معطل حالياً — راسلنا مباشرة بدلاً من ذلك.",
       privacyNotice: "بإرسال هذا النموذج، توافق على سياسة الخصوصية الخاصة بنا. نحن لا نشارك بياناتك أبداً.",
+      successTitle: "تم إرسال الرسالة!",
+      successText: "شكراً لتواصلك معنا. نهدف للرد خلال 2-3 أيام عمل.",
       
       subjectOptions: {
         general: "استفسار عام",
@@ -366,5 +391,6 @@ export const ar: Translations = {
     open: "فتح",
     search: "بحث",
     placeholder: "—",
+    scroll: "مرر",
   },
 };

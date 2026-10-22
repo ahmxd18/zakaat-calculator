@@ -21,7 +21,7 @@ const ContactInfoIcon: Record<string, React.FC<{ className?: string }>> = {
 
 export function Contact() {
   const t = useT();
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted] = useState(false);
   const [formDisabled] = useState(true); // No backend yet
   
   const contactInfo = [
@@ -138,10 +138,10 @@ export function Contact() {
                         className="text-2xl font-light text-charcoal-800"
                         style={{ fontFamily: "var(--font-display)" }}
                       >
-                        Message sent!
+                        {t.contact.form.successTitle}
                       </h3>
                       <p className="text-charcoal-500 text-sm max-w-sm">
-                        Thank you for reaching out. We aim to respond within 2–3 business days.
+                        {t.contact.form.successText}
                       </p>
                     </motion.div>
                   ) : (

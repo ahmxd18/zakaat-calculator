@@ -147,7 +147,7 @@ export function Home() {
               transition={{ delay: 1.6, duration: 0.6 }}
               className="mt-4 flex flex-col items-center gap-1 text-charcoal-400"
             >
-              <span className="text-xs uppercase tracking-widest">Scroll</span>
+              <span className="text-xs uppercase tracking-widest">{t.common.scroll}</span>
               <motion.div
                 animate={{ y: [0, 6, 0] }}
                 transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
@@ -227,7 +227,7 @@ export function Home() {
                   className="absolute inset-0 rounded-full border-2 border-dashed border-sage-200 opacity-50"
                   style={{ margin: "-32px" }}
                 />
-                <div className="relative rounded-3xl bg-gradient-to-br from-sage-50 to-cream-100 border border-sage-100 p-10 text-center space-y-6 shadow-inner">
+                <div className="relative rounded-3xl bg-linear-to-br from-sage-50 to-cream-100 border border-sage-100 p-10 text-center space-y-6 shadow-inner">
                   <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-sage-600 shadow-lg shadow-sage-200">
                     <svg viewBox="0 0 64 64" className="h-12 w-12 fill-cream-50">
                       <path d="M32 8C18.7 8 8 18.7 8 32c0 4.2 1.1 8.2 3 11.6C13.5 37.2 17.4 34 22 34c7.7 0 14 6.3 14 14 0 2.5-.7 4.9-1.9 7 .6 0 1.3.1 1.9.1 13.3 0 24-10.7 24-24S45.3 8 32 8z" />

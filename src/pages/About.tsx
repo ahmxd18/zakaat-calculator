@@ -3,7 +3,7 @@
  * Mission, vision, values, and team placeholder.
  */
 import { motion } from "framer-motion";
-import { BookOpen, Globe2, Shield, Accessibility } from "lucide-react";
+import { BookOpen, Globe2, Shield, Accessibility, Moon, Sparkles } from "lucide-react";
 import { useT } from "../contexts/i18n";
 import { Card, RevealCard } from "../components/ui/Card";
 import { SectionHeader }   from "../components/ui/SectionHeader";
@@ -28,7 +28,7 @@ export function About() {
   ];
   
   return (
-    <PageLayout className="!pt-0">
+    <PageLayout className="pt-0!">
 
       {/* ── Hero / Mission ── */}
       <section
@@ -77,7 +77,7 @@ export function About() {
             <RevealCard>
               <div className="space-y-4">
                 <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-sage-100">
-                  <span className="text-lg">🌙</span>
+                  <Moon className="h-5 w-5 text-sage-600" />
                 </div>
                 <h2
                   className="text-2xl font-light text-charcoal-800"
@@ -93,7 +93,7 @@ export function About() {
             <RevealCard delay={0.1}>
               <div className="space-y-4">
                 <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-blush-100">
-                  <span className="text-lg">✨</span>
+                  <Sparkles className="h-5 w-5 text-blush-500" />
                 </div>
                 <h2
                   className="text-2xl font-light text-charcoal-800"
@@ -163,7 +163,7 @@ export function About() {
               <RevealCard key={member.name} delay={i * 0.08}>
                 <Card hover padding="md" className="text-center space-y-3">
                   {/* Avatar initials */}
-                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-sage-400 to-sage-600 shadow-md shadow-sage-200">
+                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-linear-to-br from-sage-400 to-sage-600 shadow-md shadow-sage-200">
                     <span className="text-lg font-semibold text-cream-50">{member.initials}</span>
                   </div>
                   <div>
