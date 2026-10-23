@@ -14,7 +14,6 @@ import {
   Moon,
   Shield,
   Sparkles,
-  UserRound,
 } from "lucide-react"
 import { useT } from "../contexts/i18n"
 import { Card, RevealCard } from "../components/ui/Card"
@@ -69,7 +68,7 @@ export function About() {
   ]
 
   return (
-    <PageLayout className="pt-0!">
+    <PageLayout className="pt-0! -pb-4">
       <section
         className="relative overflow-hidden py-20 sm:py-32"
         style={{ background: "linear-gradient(135deg, #3a6337 0%, #4a7d47 100%)" }}
@@ -228,18 +227,13 @@ export function About() {
 
             <RevealCard delay={0.1}>
               <Card padding="none" className="overflow-hidden">
-                <div className="bg-sage-700 px-6 pb-8 pt-7 text-center">
-                  <div
-                    role="img"
-                    aria-label={t.about.portraitComingSoon}
-                    className="mx-auto flex h-28 w-28 flex-col items-center justify-center rounded-full border-4 border-white/70 bg-cream-100 text-sage-700 shadow-lg"
-                  >
-                    <UserRound className="h-10 w-10" />
-                    <span className="mt-0.5 text-xs font-semibold">HA</span>
-                  </div>
-                  <p className="mt-3 text-xs font-medium text-sage-100">
-                    {t.about.portraitComingSoon}
-                  </p>
+                <div className="bg-sage-700 p-4 text-center">
+                  <img
+                    loading="lazy"
+                    src="/images/my-portrait.jpeg"
+                    alt="Portrait of Habeeb Ahmed Shuaib"
+                    className="rounded-3xl object-cover shadow-lg"
+                  />
                 </div>
 
                 <div className="space-y-5 p-6">
@@ -248,7 +242,7 @@ export function About() {
                       {t.about.creatorLabel}
                     </p>
                     <h3 className="mt-1 text-xl font-semibold text-charcoal-800">
-                      Habeeb Ahmed Shuaib
+                      {t.about.creatorName}
                     </h3>
                     <p className="mt-1 text-sm text-charcoal-500">{t.about.creatorRole}</p>
                     <p className="mt-2 flex items-center gap-1.5 text-xs text-charcoal-400">
@@ -294,6 +288,7 @@ export function About() {
         </Container>
       </section>
 
+      {/* TODO: remove after review of scholars */}
       <section className="border-t border-cream-200 bg-cream-100 py-10">
         <Container narrow>
           <p className="text-center text-xs leading-relaxed text-charcoal-500">

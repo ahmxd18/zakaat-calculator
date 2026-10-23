@@ -26,8 +26,8 @@ export function Contact() {
   
   const contactInfo = [
     { icon: "mail", label: t.contact.info.email, value: INVARIANT_CONSTANTS.contact.email },
-    { icon: "map-pin", label: t.contact.info.location, value: INVARIANT_CONSTANTS.contact.location },
-    { icon: "clock", label: t.contact.info.response, value: INVARIANT_CONSTANTS.contact.responseTime },
+    { icon: "map-pin", label: t.contact.info.location, value: t.contact.info.locationValue },
+    { icon: "clock", label: t.contact.info.response, value: t.contact.info.responseValue },
   ];
   
   const subjectOptions = [

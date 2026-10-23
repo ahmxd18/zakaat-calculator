@@ -24,6 +24,14 @@ export const en = {
     },
     ctaLabel: "Calculate Now",
     languageLabel: "Language",
+    schoolLabel: "School of Fiqh",
+    schoolNames: {
+      default: "Default (No School)",
+      hanafi: "Hanafi",
+      maliki: "Maliki",
+      shafii: "Shafi'i",
+      hanbali: "Hanbali",
+    },
   },
   
   footer: {
@@ -227,7 +235,7 @@ export const en = {
     items: [
       {
         question: "Who is obligated to pay Zakaat?",
-        answer: "Every eligible Muslim whose zakatable wealth reaches Nisāb may be obligated to pay Zakaat after a hawl, subject to the applicable school’s rules. Children and those who lack mental capacity are treated differently by the schools. Consult a qualified scholar for a personal ruling.",
+        answer: "Every eligible Muslim whose zakatable wealth reaches Nisāb may be obligated to pay Zakaat after a hawl, subject to the applicable school's rules. Children and those who lack mental capacity are treated differently by the schools. Consult a qualified scholar for a personal ruling.",
       },
       {
         question: "What is the Nisaab threshold?",
@@ -301,7 +309,7 @@ export const en = {
     
     reviewEyebrow: "Scholarly review",
     reviewHeading: "A review process in progress",
-    reviewSubheading: "We are seeking qualified scholars to review the calculator’s methodology, calculations, and citations before presenting any reviewer as an endorser.",
+    reviewSubheading: "We are seeking qualified scholars to review the calculator's methodology, calculations, and citations before presenting any reviewer as an endorser.",
     reviewNotice: "No scholars have reviewed or approved this website yet. Every profile below is fictional sample content: names, locations, school affiliations, and initials are illustrative only. They are not real reviewers and do not represent endorsements.",
     sampleProfile: "Fictional sample",
     jurisprudence: "School",
@@ -314,7 +322,8 @@ export const en = {
       independent: "Not specified (sample)",
     },
     creatorLabel: "About the creator",
-    creatorRole: "Developer & creator · Web development · React / Next.js",
+    creatorName: "Habeeb Ahmed Shuaib",
+    creatorRole: "Developer & Creator · Web development · React / Next.js",
     creatorBio: "I'm a software developer passionate about building meaningful digital experiences that solve real-world problems. I created this Zakaat calculator to use my technical skills in service of the Muslim community, making Zakaat calculations easier to understand and more accessible. My focus is thoughtful design, transparent calculations, and carefully researched Islamic references. This is a software project, not a claim to religious authority; its content still needs review by qualified scholars.",
     creatorSkills: ["Software development", "UI/UX design", "Innovation", "Islamic technology"],
     portraitComingSoon: "Portrait coming soon",
@@ -332,6 +341,8 @@ export const en = {
       email: "Email",
       location: "Based in",
       response: "Response",
+      locationValue: "Hyderabad, India",
+      responseValue: "Within 2-3 business days",
     },
     
     form: {
@@ -350,7 +361,7 @@ export const en = {
       disabledNotice: "Form currently disabled — email us directly instead.",
       privacyNotice: "By submitting this form, you agree to our privacy policy. We never share your data.",
       successTitle: "Message sent!",
-      successText: "Thank you for reaching out. We aim to respond within 2–3 business days.",
+      successText: "Thank you for reaching out. We aim to respond within 2-3 business days.",
       
       subjectOptions: {
         general: "General Enquiry",
@@ -409,18 +420,18 @@ export const en = {
     },
     
     translationLabel: "Meaning in English",
-    translationNote: "Qur’an and Hadith meanings are concise explanatory renderings prepared for this page, not quotations from a named published translation. Consult trusted sources for detailed study.",
+    translationNote: "Qur'an and Hadith meanings are concise explanatory renderings prepared for this page, not quotations from a named published translation. Consult trusted sources for detailed study.",
     quranSource: "Arabic text cross-checked against the Quran Academy Uthmani edition served by AlQuran.cloud.",
     readVerse: "Read verse",
     quranTranslations: {
       alBaqarah43: "Establish prayer, give zakah, and bow with those who bow.",
       alBaqarah110: "Establish prayer and give zakah. Whatever good you send ahead for yourselves, you will find it with Allah. Allah sees all that you do.",
       alBaqarah267: "Believers, give from the good things you have earned and from what We have brought forth for you from the earth. Do not choose the inferior of it to give when you would not accept it yourselves except with reluctance. Know that Allah is self-sufficient and worthy of praise.",
-      atTawbah60: "Zakah is for the poor, the needy, those who administer it, those whose hearts are to be reconciled, freeing people from bondage, those in debt, in Allah’s cause, and the traveller in need—a duty prescribed by Allah. Allah is all-knowing, wise.",
+      atTawbah60: "Zakah is for the poor, the needy, those who administer it, those whose hearts are to be reconciled, freeing people from bondage, those in debt, in Allah's cause, and the traveller in need—a duty prescribed by Allah. Allah is all-knowing, wise.",
       atTawbah71: "Believing men and women support one another: they encourage what is right, discourage what is wrong, establish prayer, give zakah, and obey Allah and His Messenger. Allah will show them mercy. Allah is mighty and wise.",
       atTawbah103: "Take charity from their wealth to cleanse and purify them by it, and pray for them; your prayer brings them reassurance. Allah is all-hearing, all-knowing.",
       anNur56: "Establish prayer, give zakah, and obey the Messenger so that you may receive mercy.",
-      arRum39: "Whatever you give as interest to increase through people’s wealth does not increase with Allah; but what you give as zakah, seeking Allah’s pleasure—those are the ones whose reward is multiplied.",
+      arRum39: "Whatever you give as interest to increase through people's wealth does not increase with Allah; but what you give as zakah, seeking Allah's pleasure—those are the ones whose reward is multiplied.",
     } satisfies Record<QuranVerseKey, string>,
     quranNotes: {
       generalGiving: "This verse speaks broadly about giving from good earnings and produce; it is relevant to charitable giving but does not by itself define all Zakah rules.",

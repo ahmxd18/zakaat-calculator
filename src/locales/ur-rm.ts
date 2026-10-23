@@ -25,6 +25,14 @@ export const urRm: Translations = {
     },
     ctaLabel: "Ab Hisaab Karein",
     languageLabel: "Zubaan",
+    schoolLabel: "Fiqhi Madhhab",
+    schoolNames: {
+      default: "Default (koi madhhab nahi)",
+      hanafi: "Hanafi",
+      maliki: "Maliki",
+      shafii: "Shafi'i",
+      hanbali: "Hanbali",
+    },
   },
   
   footer: {
@@ -315,7 +323,8 @@ export const urRm: Translations = {
       independent: "Zikar nahi (namoona)",
     },
     creatorLabel: "Creator ke baare mein",
-    creatorRole: "Developer aur creator · Web development · React / Next.js",
+    creatorName: "Habeeb Ahmed Shuaib",
+    creatorRole: "Developer aur Creator · Web development · React / Next.js",
     creatorBio: "Main software developer hoon aur ba-maqsad digital tajurbe banane ka shauq rakhta hoon jo haqeeqi masail hal karein. Maine yeh Zakaat calculator apni technical maharat Muslim community ki khidmat mein istemal karne aur Zakaat ke hisaab ko samajhna aur hasil karna aasan banane ke liye banaya. Meri tawajju soch samajh kar design, saaf hisaabaat aur ehtiyaat se tehqeeq kiye gaye Islami hawalon par hai. Yeh software ka project hai, deeni authority ka daawa nahi; iske mazmoon ko abhi ahl ulamaa ke jaize ki zaroorat hai.",
     creatorSkills: ["Software development", "UI/UX design", "Innovation", "Islami technology"],
     portraitComingSoon: "Tasveer jald shamil hogi",
@@ -333,6 +342,8 @@ export const urRm: Translations = {
       email: "Email",
       location: "Hamara Markaz",
       response: "Jawab",
+      locationValue: "Hyderabad, India",
+      responseValue: "2-3 karobaari dinon ke andar",
     },
     
     form: {
