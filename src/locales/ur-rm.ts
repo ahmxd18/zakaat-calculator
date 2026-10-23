@@ -113,40 +113,44 @@ export const urRm: Translations = {
       },
       goldSilver: {
         label: "Sona Aur Chaandi",
-        description: "Haqeeqi sona/chaandi aur bachat ke liye rakhe gaye zevar.",
+        description: "Mehfooz sona/chaandi ko rozana zaati istemal ke zevar se alag darj karein. Ghair-mustasna ya sarmaya kari ke zevar mehfooz maal wale khane mein likhein.",
         fields: {
-          goldGrams: "Sona (grams)",
-          silverGrams: "Chaandi (grams)",
+          goldGrams: "Mehfooz / ghair istemal sona (grams)",
+          wornGoldGrams: "Istemal mein sona (grams)",
+          silverGrams: "Mehfooz / ghair istemal chaandi (grams)",
+          wornSilverGrams: "Istemal mein chaandi (grams)",
         },
       },
       investments: {
         label: "Sarmaayakari Aur Shares",
-        description: "Stocks, shares, sarmaayakari funds (zakaat wala hissa).",
+        description: "Har sarmaayakari qisam ki bazaar qeemat darj karein.",
         fields: {
-          stocks: "Stocks Aur Shares",
+          stocks: "Tijarati stocks aur shares",
+          incomeStocks: "Aamdani wale shares (bazaar qeemat; 25% shamil)",
           crypto: "Cryptocurrency",
-          pension: "Qabil-e-Rasaai Pension",
+          pension: "Pension ka qabil-e-rasaai hissa",
         },
       },
       business: {
         label: "Tijarat Ke Maal",
-        description: "Farookht ke liye stock/maal, tijarat ke qarzay.",
+        description: "Tijarati maal, wasool hone wali raqam, aur farookht ke liye rakhi jaidad.",
         fields: {
           stockInventory: "Stock / Maal",
           receivables: "Aapko Milne Wala Paisa",
+          tradeRealEstate: "Tijarat ke liye rakhi jaidad",
         },
       },
       deductions: {
         label: "Zimmedariyan Aur Katootiyan",
-        description: "Mukhtasir muddat ke qarzay, qamri saal mein adaa hone wale bills.",
+        description: "Sirf muntakhib madhab ke mutabiq qarz aur bills darj karein.",
         fields: {
-          debtsOwed: "Aap Par Qarz",
+          debtsOwed: "Qabil-e-katoti qarz",
           billsDue: "Ab Adaa Hone Wale Bills",
         },
       },
     },
     
-    nisaabNote: "Nisaab sone (85g) ya chaandi (595g) ki kam qeemat se hisaab kiya jata hai. Hum bazaar ki qeemtein muntazim tor par update karte hain.",
+    nisaabNote: "Nisaab ki had muntakhib sone ya chaandi ke mayar se hisaab hoti hai. Ibtidai tajweez muntakhib madhab ke mutabiq hoti hai jab tak aap doosra mayar na chunein.",
     
     nisaabStandard: {
       label: "Nisaab Ka Mayar",
@@ -157,6 +161,22 @@ export const urRm: Translations = {
       goldDesc: "Shafi'i aur Hanbali madhab ki tarjeeh",
       silver: "Chaandi (595g)",
       silverDesc: "Hanafi ka bunyadi mauqif — zyada wasee dayra",
+    },
+
+    schoolRules: {
+      default: "Default (koi madhab nahi) pehla hisaab rakhta hai: sona ya chaandi mein se kam nisaab, darj tamam zevar shamil, qarz ki katooti, tijarati jaidad shamil, aur hawl ki tareekh ki shart nahi.",
+      hanafi: "Hanafi: pehne hue sone aur chaandi par zakaat shamil hai; jaiz foran qarz minus hote hain; saal ke darmiyan nisaab se kam hona hawl dobara shuru nahi karta. Kam nisaab default hai.",
+      maliki: "Maliki: zaati istemal ke pehne hue zevar shamil nahi; jaiz qarz minus hote hain; nisaab se kam hona hawl dobara shuru karta hai. Kam nisaab default hai.",
+      shafii: "Shafi'i: zaati istemal ke pehne hue zevar shamil nahi; qarz minus nahi hote; nisaab se kam hona hawl dobara shuru karta hai. Sone ka nisaab default hai.",
+      hanbali: "Hanbali: zaati istemal ke pehne hue zevar shamil nahi; jaiz qarz minus hote hain; nisaab se kam hona aam tor par hawl dobara shuru karta hai (mukhtasir kami ka hukm mukhtalif ho sakta hai). Tijarati jaidad bhi shamil hai.",
+    },
+
+    hawl: {
+      title: "Hawl (qamri saal) ki ahliyat",
+      description: "Jis hawl ka hisaab karna hai uski shuru ki tareekh darj karein. Qamri saal taqreeban 354 din hai; jin madhahib mein nisaab kam hone par hawl dobara shuru hota hai, wahan nisaab dobara pohanchne ki tareekh darj karein.",
+      startDate: "Hawl shuru hone ki tareekh (maal nisaab tak pohanchne par)",
+      dippedBelowNisaab: "Is hawl ke dauran mera zakaat ke qabil maal nisaab se kam hua",
+      hanafiNote: "Hanafi hisaab ke liye is hawl mein pehli martaba nisaab tak pohanchne ki tareekh darj karein. Agar ibtida aur ab nisaab poora ho to darmiyan ki aarzi kami ka asar nahi hota.",
     },
     
     prices: {
@@ -175,9 +195,15 @@ export const urRm: Translations = {
       title: "Aapka Zakaat Ka Khulasa",
       subtitle: "Form bharte waqt real-time mein hisaab kiya jata hai",
       totalAssets: "Kul Maal",
-      totalDeductions: "Kul Katootiyan",
+      totalDeductions: "Laagu katootiyan",
+      deductionsNotApplied: "Aapke darj qarz minus nahi kiye gaye kyun ke muntakhib madhab aam tor par qarz ki katooti ki ijazat nahi deta.",
       netWealth: "Saaf Zakaat Wali Daulat",
       nisaabThreshold: "Nisaab Ki Had",
+      hawl: "Hawl ki surat-e-haal",
+      hawlIncomplete: "Mukammal qamri saal nahi guzra — abhi zakaat wajib nahi",
+      hawlInvalid: "Maal ke nisaab tak pohanchne ki durust tareekh darj karein",
+      hawlReset: "Nisaab ki kami se hawl dobara shuru hota hai — abhi zakaat wajib nahi",
+      hawlComplete: "Mukammal",
       zakaatDue: "Wajib Zakaat",
       belowNisaab: "Nisaab ki had se kam — koi zakaat wajib nahi",
       zakaatRate: "Aapki saaf zakaat wali daulat ka 2.5%",
@@ -202,7 +228,7 @@ export const urRm: Translations = {
     items: [
       {
         question: "Zakaat ada karne ki zimmedari kis par hai?",
-        answer: "Har musalman jo samajhdar, baligh (buloogh ki umar ko pohanchne ke baad), azaad hai, aur nisaab se zyada daulat ek mukammal qamri saal (hawl) ke liye rakhta hai us par zakaat farz hai. Zakaat bachon ya dimaaghi ahliyyat na rakhne walon par farz nahi.",
+        answer: "Har ahl musalman ke zakaat ke qabil maal ke nisaab tak pohanchne aur hawl guzarnay par zakaat wajib ho sakti hai, mutaliqa madhab ke ahkaam ke mutabiq. Bachon aur zehni ahliyat na rakhne walon ke ahkaam madhahib mein mukhtalif hain. Apne halaat ke liye kisi mu'tabar aalim se mashwara karein.",
       },
       {
         question: "Nisaab ki had kya hai?",
@@ -210,7 +236,7 @@ export const urRm: Translations = {
       },
       {
         question: "Hawl (qamri saal) kya hai?",
-        answer: "Hawl Islami qamri saal hai (354 din). Aapki daulat nisaab se oopar ek mukammal hawl tak rehni chahiye zakaat wajib hone se pehle. Zakaat ka saal us din se shuru hota hai jab aapki daulat pehli baar nisaab tak pohanchti hai.",
+        answer: "Hawl taqreeban 354 din hota hai aur zakaat ke qabil maal ke nisaab tak pohanchne se shuru hota hai. Madhahib ke ahkaam mukhtalif hain: Hanafi mauqif mein ibtida aur ikhtitam par nisaab ho to darmiyan ki aarzi kami aam tor par hawl dobara shuru nahi karti; Maliki, Shafi'i aur Hanbali mauqif mein kami ke baad aam tor par hawl dobara shuru hota hai. Madhab chunne par calculator hawl ki maloomat poochta hai; apne halaat ke liye kisi mu'tabar aalim se mashwara karein.",
       },
       {
         question: "Zakaat ki dar kya hai?",
@@ -369,7 +395,7 @@ export const urRm: Translations = {
     },
     
     methodologyHeading: "Hamara Manhaj",
-    methodologyText: "Hamare hisaabaat Hanafi school ke chaandi ki nisaab ko default tor par istemaal karne ka tareeqa ikhtyaar karte hain, jabke sone ke mayar par switch karne ka ikhtiyar bhi dete hain. Tamaam ahkaam char badi schools of jurisprudence (Hanafi, Maliki, Shafi'i, Hanbali) aur asr-e-hazir ke ilmi idaron ke mutabiq cross-check kiye gaye hain.",
+    methodologyText: "Madhab chunne se tajweez shuda nisaab aur calculator mein dikhaye gaye school-specific ahkaam laagu hote hain, jin mein zevar, qarz aur hawl ke usool shamil hain. Nisaab ko override kiya ja sakta hai aur Default (koi madhab nahi) ka option bhi maujood hai. Yeh hisaabaat research reference par mabni andazay hain; zaati hukm ke liye kisi mu'tabar aalim se mashwara karein.",
     methodologyLink: "Koi ghalti dekhi ya koi ilmi islah hai?",
     methodologyLinkText: "Hamari Fiqh committee se rabta karein →",
     

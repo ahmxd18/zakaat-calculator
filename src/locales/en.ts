@@ -111,40 +111,44 @@ export const en = {
       },
       goldSilver: {
         label: "Gold & Silver",
-        description: "Physical gold/silver and gold/silver jewellery held for saving.",
+        description: "Enter stored/non-worn metal separately from permissible personal-use jewellery worn regularly. Put non-exempt or investment jewellery in the stored/non-worn field.",
         fields: {
-          goldGrams: "Gold (grams)",
-          silverGrams: "Silver (grams)",
+          goldGrams: "Stored / non-worn gold (grams)",
+          wornGoldGrams: "Worn personal-use gold (grams)",
+          silverGrams: "Stored / non-worn silver (grams)",
+          wornSilverGrams: "Worn personal-use silver (grams)",
         },
       },
       investments: {
         label: "Investments & Shares",
-        description: "Stocks, shares, investment funds (zakatable portion).",
+        description: "Enter the market value of each investment category.",
         fields: {
-          stocks: "Stocks & Shares",
+          stocks: "Trading stocks & shares",
+          incomeStocks: "Income shares (market value; 25% counted)",
           crypto: "Cryptocurrency",
-          pension: "Accessible Pension",
+          pension: "Accessible pension portion",
         },
       },
       business: {
         label: "Business Assets",
-        description: "Stock/inventory intended for sale, trade receivables.",
+        description: "Trade inventory, recoverable receivables, and property held for resale.",
         fields: {
           stockInventory: "Stock / Inventory",
           receivables: "Money Owed to You",
+          tradeRealEstate: "Real estate held for trade",
         },
       },
       deductions: {
         label: "Liabilities & Deductions",
-        description: "Short-term debts, bills due within the lunar year.",
+        description: "Enter only debts and bills relevant to the selected school.",
         fields: {
-          debtsOwed: "Debts You Owe",
+          debtsOwed: "Eligible debts you owe",
           billsDue: "Bills Due Now",
         },
       },
     },
     
-    nisaabNote: "Nisaab is calculated using the lower of gold (85g) or silver (595g) value. We update market prices regularly.",
+    nisaabNote: "The Nisāb threshold uses the selected gold or silver standard. Its initial recommendation follows the selected madhab unless you choose an override.",
     
     nisaabStandard: {
       label: "Nisaab Standard",
@@ -155,6 +159,22 @@ export const en = {
       goldDesc: "Preferred by Shafi'i & Hanbali schools",
       silver: "Silver (595g)",
       silverDesc: "Default Hanafi position — broader coverage",
+    },
+
+    schoolRules: {
+      default: "Default (No School) keeps the original calculation: lower gold/silver Nisāb, all entered jewellery included, debt deductions applied, trade real estate included, and no hawl history gate.",
+      hanafi: "Hanafi: worn gold and silver count; eligible immediate debts are deducted; a mid-year Nisāb dip does not reset the hawl. The calculator uses the lower Nisāb by default.",
+      maliki: "Maliki: worn personal-use jewellery is excluded; eligible debts are deducted; a Nisāb dip resets the hawl. The calculator uses the lower Nisāb by default.",
+      shafii: "Shafi'i: worn personal-use jewellery is excluded; debt deductions are not applied; a Nisāb dip resets the hawl. Gold Nisāb is selected by default.",
+      hanbali: "Hanbali: worn personal-use jewellery is excluded; eligible debts are deducted; a Nisāb dip generally resets the hawl (brief dips may be treated differently). Trade real estate is included.",
+    },
+
+    hawl: {
+      title: "Hawl (lunar-year) eligibility",
+      description: "Enter the start date for the hawl being checked. A lunar year is approximated as 354 days; where the selected school resets the hawl after a dip, use the date Nisāb was reached again.",
+      startDate: "Hawl start date (when wealth reached Nisāb)",
+      dippedBelowNisaab: "My zakatable wealth fell below Nisāb during this hawl",
+      hanafiNote: "For Hanafi calculations, use the date Nisāb was first reached for this hawl. A mid-year dip is ignored if Nisāb is met at the start and now.",
     },
     
     prices: {
@@ -173,9 +193,15 @@ export const en = {
       title: "Your Zakaat Summary",
       subtitle: "Calculated in real-time as you fill in the form",
       totalAssets: "Total Assets",
-      totalDeductions: "Total Deductions",
+      totalDeductions: "Deductions applied",
+      deductionsNotApplied: "Your reported debts were not subtracted because the selected school does not generally permit debt deductions.",
       netWealth: "Net Zakatable Wealth",
       nisaabThreshold: "Nisaab Threshold",
+      hawl: "Hawl status",
+      hawlIncomplete: "A full lunar year has not elapsed — no Zakaat due yet",
+      hawlInvalid: "Enter a valid date when your wealth reached Nisāb",
+      hawlReset: "Nisāb dip resets the hawl — no Zakaat due yet",
+      hawlComplete: "Complete",
       zakaatDue: "Zakaat Due",
       belowNisaab: "Below Nisaab threshold — no Zakaat due",
       zakaatRate: "2.5% of your net zakatable wealth",
@@ -200,7 +226,7 @@ export const en = {
     items: [
       {
         question: "Who is obligated to pay Zakaat?",
-        answer: "Every Muslim who is sane, adult (past the age of puberty), free, and possesses wealth above the Nisaab threshold for a complete lunar year (Hawl) is obligated to pay Zakaat. Zakaat is not required of children or those who lack mental capacity.",
+        answer: "Every eligible Muslim whose zakatable wealth reaches Nisāb may be obligated to pay Zakaat after a hawl, subject to the applicable school’s rules. Children and those who lack mental capacity are treated differently by the schools. Consult a qualified scholar for a personal ruling.",
       },
       {
         question: "What is the Nisaab threshold?",
@@ -208,7 +234,7 @@ export const en = {
       },
       {
         question: "What is the Hawl (lunar year)?",
-        answer: "The Hawl is the Islamic lunar year (354 days). Your wealth must have remained above the Nisaab for a complete Hawl before Zakaat becomes due. The Zakaat year begins on the day your wealth first reaches the Nisaab.",
+        answer: "The Hawl is approximately 354 days, beginning when zakatable wealth reaches Nisāb. School rules differ: the Hanafi position generally does not reset the year for a temporary mid-year dip if Nisāb is met at both endpoints; Maliki, Shafi'i, and Hanbali positions generally reset it after a dip. The calculator asks for your hawl history when a school is selected; consult a qualified scholar for your circumstances.",
       },
       {
         question: "What is the Zakaat rate?",
@@ -367,7 +393,7 @@ export const en = {
     },
     
     methodologyHeading: "Our Methodology",
-    methodologyText: "Our calculations follow the Hanafi school's use of the silver Nisaab as default, while providing optional switching to the gold standard. All rulings are cross-referenced across the four major schools of jurisprudence (Hanafi, Maliki, Shafi'i, Hanbali) and contemporary scholarly bodies.",
+    methodologyText: "Selecting a madhab applies its Nisāb recommendation and the school-specific rules shown on the calculator, including jewellery, debt, and hawl treatment. Nisāb can be overridden, and Default (No School) remains available. These calculations are estimates based on a research reference; consult a qualified scholar for personal rulings.",
     methodologyLink: "Spot an error or have a scholarly correction?",
     methodologyLinkText: "Contact our Fiqh committee →",
     
@@ -393,4 +419,13 @@ export const en = {
   },
 } as const;
 
-export type Translations = typeof en;
+type Widen<T> =
+  T extends "ltr" | "rtl" ? "ltr" | "rtl"
+    : T extends string ? string
+      : T extends number ? number
+        : T extends boolean ? boolean
+          : T extends readonly (infer Item)[] ? readonly Widen<Item>[]
+            : T extends object ? { [Key in keyof T]: Widen<T[Key]> }
+              : T
+
+export type Translations = Widen<typeof en>

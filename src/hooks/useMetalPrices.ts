@@ -14,6 +14,11 @@ interface CacheEntry {
   fetchedAt: number;
 }
 
+interface PriceResult extends CacheEntry {
+  currency: string;
+  status: PriceStatus;
+}
+
 /** In-memory cache shared across all hook instances */
 const cache = new Map<string, CacheEntry>();
 
@@ -27,42 +32,57 @@ interface UseMetalPricesResult {
 }
 
 export function useMetalPrices(currency: string): UseMetalPricesResult {
-  const [prices, setPrices] = useState<MetalPrices>(FALLBACK_PRICES);
-  const [status, setStatus] = useState<PriceStatus>("loading");
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [result, setResult] = useState<PriceResult>({
+    currency,
+    data: FALLBACK_PRICES,
+    fetchedAt: 0,
+    status: "loading",
+  });
   const abortRef = useRef<AbortController | null>(null);
+  const requestIdRef = useRef(0);
 
   const load = useCallback(
     async (force = false) => {
+      abortRef.current?.abort();
+      const controller = new AbortController();
+      abortRef.current = controller;
+      const requestId = ++requestIdRef.current;
+      const isCurrentRequest = () =>
+        requestIdRef.current === requestId && !controller.signal.aborted;
+
       const cacheKey = currency;
       const cached = cache.get(cacheKey);
       const now = Date.now();
 
       // Serve from cache if still fresh and not forced
       if (!force && cached && now - cached.fetchedAt < CACHE_TTL_MS) {
-        setPrices(cached.data);
-        setLastUpdated(new Date(cached.fetchedAt));
-        setStatus("live");
+        setResult({ currency, ...cached, status: "live" });
         return;
       }
 
       // Check if API key is even configured
       const apiKey = import.meta.env.VITE_GOLD_API_KEY;
       if (!apiKey) {
-        setPrices(FALLBACK_PRICES);
-        setStatus("fallback");
-        setLastUpdated(null);
+        setResult({
+          currency,
+          data: FALLBACK_PRICES,
+          fetchedAt: 0,
+          status: "fallback",
+        });
         return;
       }
 
-      // Cancel any in-flight request
-      abortRef.current?.abort();
-      abortRef.current = new AbortController();
-
-      setStatus("loading");
+      setResult({
+        currency,
+        data: FALLBACK_PRICES,
+        fetchedAt: 0,
+        status: "loading",
+      });
 
       try {
-        const data = await fetchMetalPrices(currency);
+        const data = await fetchMetalPrices(currency, controller.signal);
+        if (!isCurrentRequest()) return;
+
         const fetchedAt = Date.now();
 
         // Detect if we got actual live data or silent fallback
@@ -71,15 +91,20 @@ export function useMetalPrices(currency: string): UseMetalPricesResult {
           data.silverPricePerGram !== FALLBACK_PRICES.silverPricePerGram;
 
         cache.set(cacheKey, { data, fetchedAt });
-        setPrices(data);
-        setLastUpdated(new Date(fetchedAt));
-        setStatus(isLive ? "live" : "fallback");
+        setResult({
+          currency,
+          data,
+          fetchedAt,
+          status: isLive ? "live" : "fallback",
+        });
       } catch {
-        // Only update state if the error wasn't from our own abort
-        if (!abortRef.current.signal.aborted) {
-          setStatus("error");
-          setPrices(FALLBACK_PRICES);
-          setLastUpdated(null);
+        if (isCurrentRequest()) {
+          setResult({
+            currency,
+            data: FALLBACK_PRICES,
+            fetchedAt: 0,
+            status: "error",
+          });
         }
       }
     },
@@ -88,14 +113,27 @@ export function useMetalPrices(currency: string): UseMetalPricesResult {
 
   // Reload when currency changes
   useEffect(() => {
-    load();
-    return () => { abortRef.current?.abort(); };
+    void load();
+    return () => {
+      abortRef.current?.abort();
+      requestIdRef.current += 1;
+    };
   }, [load]);
 
   const refresh = useCallback(() => {
     cache.delete(currency);
-    load(true);
+    void load(true);
   }, [currency, load]);
 
-  return { prices, status, lastUpdated, refresh };
+  const currentResult =
+    result.currency === currency
+      ? result
+      : { data: FALLBACK_PRICES, fetchedAt: 0, status: "loading" as const };
+
+  return {
+    prices: currentResult.data,
+    status: currentResult.status,
+    lastUpdated: currentResult.fetchedAt ? new Date(currentResult.fetchedAt) : null,
+    refresh,
+  };
 }

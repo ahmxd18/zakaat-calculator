@@ -32,16 +32,18 @@ const GOLDAPI_BASE = "https://www.goldapi.io/api";
 
 /**
  * Fetch gold price per gram for a given currency.
- * Returns null on any failure so the caller can fall back gracefully.
+ * Returns null on failure so the caller can fall back gracefully; aborts propagate.
  */
 async function fetchMetalGram(
   symbol: "XAU" | "XAG",
   currency: SupportedCurrency,
   apiKey: string,
+  signal?: AbortSignal,
 ): Promise<number | null> {
   try {
     const res = await fetch(`${GOLDAPI_BASE}/${symbol}/${currency}`, {
       headers: { "x-access-token": apiKey },
+      signal,
     });
     if (!res.ok) return null;
 
@@ -52,16 +54,20 @@ async function fetchMetalGram(
       return data.price_gram_24k;
     }
     return null;
-  } catch {
+  } catch (error) {
+    if (signal?.aborted) throw error;
     return null;
   }
 }
 
 /**
  * Fetch both gold and silver per-gram prices.
- * Silently falls back to FALLBACK_PRICES on any issue.
+ * Silently falls back to FALLBACK_PRICES on request failures; aborts propagate.
  */
-export async function fetchMetalPrices(currency: string): Promise<MetalPrices> {
+export async function fetchMetalPrices(
+  currency: string,
+  signal?: AbortSignal,
+): Promise<MetalPrices> {
   const apiKey = import.meta.env.VITE_GOLD_API_KEY;
 
   // No key configured — return fallback immediately
@@ -70,8 +76,8 @@ export async function fetchMetalPrices(currency: string): Promise<MetalPrices> {
   const supportedCurrency = currency as SupportedCurrency;
 
   const [gold, silver] = await Promise.all([
-    fetchMetalGram("XAU", supportedCurrency, apiKey),
-    fetchMetalGram("XAG", supportedCurrency, apiKey),
+    fetchMetalGram("XAU", supportedCurrency, apiKey, signal),
+    fetchMetalGram("XAG", supportedCurrency, apiKey, signal),
   ]);
 
   return {

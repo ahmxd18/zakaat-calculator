@@ -9,8 +9,9 @@
 import { useState, useEffect } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Moon, Languages, ChevronDown } from "lucide-react";
+import { Menu, X, Moon, Languages, ChevronDown, BookOpen } from "lucide-react";
 import { useTranslation, type Language } from "../../contexts/i18n";
+import { useMadhab, MADHABS } from "../../contexts/madhab";
 import { Button } from "../ui/Button";
 import { cn } from "../../utils/cn";
 
@@ -25,13 +26,16 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  const [madhabOpen, setMadhabOpen] = useState(false);
   const location = useLocation();
   const { translations: t, language, setLanguage, direction } = useTranslation();
+  const { madhab, setMadhab } = useMadhab();
 
   // Close mobile menu and language dropdown on route change
   useEffect(() => { 
     setIsOpen(false);
     setLangOpen(false);
+    setMadhabOpen(false);
   }, [location.pathname]);
 
   // Detect scroll for header background
@@ -130,6 +134,54 @@ export function Navbar() {
 
             {/* ── Desktop language + CTA ── */}
             <div className="hidden lg:flex items-center gap-2 shrink-0">
+              {/* Madhab (school) dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => { setMadhabOpen(!madhabOpen); setLangOpen(false); }}
+                  className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-charcoal-600 hover:bg-sage-50 rounded-lg transition-colors"
+                  aria-label="Select school of Fiqh"
+                >
+                  <BookOpen className="h-4 w-4" />
+                  <span className="hidden xl:inline">
+                    {MADHABS.find(m => m.code === madhab)?.name ?? "School"}
+                  </span>
+                  <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", madhabOpen && "rotate-180")} />
+                </button>
+
+                <AnimatePresence>
+                  {madhabOpen && (
+                    <>
+                      <div className="fixed inset-0 z-40" onClick={() => setMadhabOpen(false)} />
+                      <motion.div
+                        initial={{ opacity: 0, y: -8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute top-full mt-2 end-0 z-50 w-64 rounded-xl bg-white border border-cream-200 shadow-lg py-1"
+                      >
+                        {MADHABS.map(m => (
+                          <button
+                            key={m.code}
+                            onClick={() => { setMadhab(m.code); setMadhabOpen(false); }}
+                            className={cn(
+                              "w-full text-start px-4 py-2.5 transition-colors",
+                              madhab === m.code
+                                ? "bg-sage-50 text-sage-700 font-semibold"
+                                : "text-charcoal-600 hover:bg-cream-50"
+                            )}
+                          >
+                            <p className="text-sm">{m.name}</p>
+                            {m.regions !== "Universal" && (
+                              <p className="text-[11px] text-charcoal-400 mt-0.5">{m.regions}</p>
+                            )}
+                          </button>
+                        ))}
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
+              </div>
+
               {/* Language dropdown */}
               <div className="relative">
                 <button
@@ -308,6 +360,29 @@ export function Navbar() {
 
               {/* Language selector + CTA at bottom */}
               <div className="px-5 pb-8 pt-4 border-t border-cream-200 space-y-3">
+                {/* Madhab selector */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-charcoal-500 uppercase tracking-wider px-2">
+                    School of Fiqh
+                  </label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {MADHABS.map(m => (
+                      <button
+                        key={m.code}
+                        onClick={() => setMadhab(m.code)}
+                        className={cn(
+                          "px-3 py-2 text-sm font-medium rounded-lg transition-colors text-start",
+                          madhab === m.code
+                            ? "bg-sage-600 text-cream-50"
+                            : "bg-cream-100 text-charcoal-600 hover:bg-cream-200"
+                        )}
+                      >
+                        {m.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 {/* Language selector */}
                 <div className="space-y-1.5">
                   <label className="text-xs font-semibold text-charcoal-500 uppercase tracking-wider px-2">

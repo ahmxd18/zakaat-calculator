@@ -15,8 +15,14 @@ export interface ZakaatSummaryProps {
     subtitle: string
     totalAssets: string
     totalDeductions: string
+    deductionsNotApplied: string
     netWealth: string
     nisaabThreshold: string
+    hawl: string
+    hawlIncomplete: string
+    hawlInvalid: string
+    hawlReset: string
+    hawlComplete: string
     zakaatDue: string
     belowNisaab: string
     zakaatRate: string
@@ -28,9 +34,21 @@ export interface ZakaatSummaryProps {
 export function ZakaatSummary({ result, formatCurrency, labels }: ZakaatSummaryProps) {
   const rows = [
     { label: labels.totalAssets,      value: formatCurrency(result.totalAssets) },
-    { label: labels.totalDeductions,  value: formatCurrency(result.totalDeductions) },
+    { label: labels.totalDeductions, value: formatCurrency(result.deductionsApplied) },
     { label: labels.netWealth,        value: formatCurrency(result.netZakaatableWealth) },
     { label: labels.nisaabThreshold,  value: formatCurrency(result.nisaabThreshold) },
+    ...(result.hawlStatus === "not-required"
+      ? []
+      : [{
+          label: labels.hawl,
+          value: result.hawlStatus === "complete"
+            ? labels.hawlComplete
+            : result.hawlStatus === "reset"
+              ? labels.hawlReset
+              : result.hawlStatus === "invalid"
+                ? labels.hawlInvalid
+                : labels.hawlIncomplete,
+        }]),
   ]
 
   return (
@@ -45,7 +63,6 @@ export function ZakaatSummary({ result, formatCurrency, labels }: ZakaatSummaryP
           </h3>
           <p className="text-xs text-charcoal-500 mt-1">{labels.subtitle}</p>
         </div>
-
         {/* Summary rows */}
         <div className="space-y-3">
           {rows.map((row) => (
@@ -58,6 +75,11 @@ export function ZakaatSummary({ result, formatCurrency, labels }: ZakaatSummaryP
             </div>
           ))}
         </div>
+        {result.totalDeductions > result.deductionsApplied && (
+          <p className="text-xs leading-relaxed text-charcoal-500">
+            {labels.deductionsNotApplied}
+          </p>
+        )}
 
         {/* Zakaat due highlight */}
         <div className="rounded-2xl bg-sage-600 px-5 py-5 text-center space-y-1">
@@ -71,7 +93,15 @@ export function ZakaatSummary({ result, formatCurrency, labels }: ZakaatSummaryP
             {formatCurrency(result.zakaatDue)}
           </p>
           <p className="text-xs text-sage-300">
-            {result.isBelowNisaab ? labels.belowNisaab : labels.zakaatRate}
+            {result.isBelowNisaab
+              ? labels.belowNisaab
+              : result.hawlStatus === "incomplete"
+                ? labels.hawlIncomplete
+                : result.hawlStatus === "reset"
+                  ? labels.hawlReset
+                  : result.hawlStatus === "invalid"
+                    ? labels.hawlInvalid
+                    : labels.zakaatRate}
           </p>
         </div>
 

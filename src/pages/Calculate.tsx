@@ -12,6 +12,7 @@ import { useState, useEffect, useMemo } from "react"
 import { Banknote, Coins, TrendingUp, Store, Minus, Info, RefreshCw } from "lucide-react"
 import { Button } from "../components/ui/Button"
 import { Card } from "../components/ui/Card"
+import { Select } from "../components/ui/Select"
 import { SectionHeader } from "../components/ui/SectionHeader"
 import { Container } from "../components/layout/Container"
 import { RevealCard } from "../components/ui/Card"
@@ -19,10 +20,13 @@ import { PageLayout } from "../components/layout/PageLayout"
 import { getCurrencySymbol } from "../utils/currency"
 import { calculateZakaat, type AssetValues, type NisaabStandard } from "../utils/zakaat"
 import { useT, useTranslation } from "../contexts/i18n"
+import { useMadhab } from "../contexts/madhab"
 import { INVARIANT_CONSTANTS } from "../constants/invariants"
 import { useMetalPrices } from "../hooks/useMetalPrices"
+import { useGeoLocation } from "../hooks/useGeoLocation"
 import {
   AssetSection,
+  HawlEligibility,
   LivePricesPanel,
   NisaabStandardToggle,
   ZakaatSummary,
@@ -31,55 +35,168 @@ import {
 // ── Persistence keys ────────────────────────────────────────────────────────
 const STORAGE_KEY = "zakaat_calculator_data"
 const STANDARD_KEY = "zakaat_nisaab_standard"
+const STANDARD_OVERRIDE_KEY = "zakaat_nisaab_standard_manual"
+const HAWL_KEY = "zakaat_hawl_data"
+
+const EMPTY_VALUES: AssetValues = {
+  cash_on_hand: 0,
+  bank_savings: 0,
+  foreign_cash: 0,
+  gold_grams: 0,
+  silver_grams: 0,
+  worn_gold_grams: 0,
+  worn_silver_grams: 0,
+  stocks: 0,
+  income_stocks: 0,
+  crypto: 0,
+  pension: 0,
+  stock_inventory: 0,
+  receivables: 0,
+  trade_real_estate: 0,
+  debts_owed: 0,
+  bills_due: 0,
+}
+
+interface HawlData {
+  startDate: string
+  fellBelowNisaab: boolean
+}
+
+const EMPTY_HAWL: HawlData = { startDate: "", fellBelowNisaab: false }
+
+function isStoredAssetValues(value: unknown): value is Record<string, number> {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false
+  return Object.entries(value).every(([key, amount]) =>
+    Object.prototype.hasOwnProperty.call(EMPTY_VALUES, key) &&
+    typeof amount === "number" &&
+    Number.isFinite(amount) &&
+    amount >= 0,
+  )
+}
 
 // ── Initial state helpers ────────────────────────────────────────────────────
 function getInitialValues(): AssetValues {
   try {
     const stored = localStorage.getItem(STORAGE_KEY)
-    if (stored) return JSON.parse(stored) as AssetValues
-  } catch {}
-  return {
-    cash_on_hand: 0, bank_savings: 0, foreign_cash: 0,
-    gold_grams: 0, silver_grams: 0,
-    stocks: 0, crypto: 0, pension: 0,
-    stock_inventory: 0, receivables: 0,
-    debts_owed: 0, bills_due: 0,
+    if (stored) {
+      const parsed: unknown = JSON.parse(stored)
+      if (!isStoredAssetValues(parsed)) throw new Error("Saved calculator data is invalid.")
+      const restored = { ...EMPTY_VALUES }
+      for (const [key, amount] of Object.entries(parsed)) restored[key] = amount
+      return restored
+    }
+  } catch (error) {
+    console.error("Unable to load saved calculator data.", error)
   }
+  return EMPTY_VALUES
 }
 
-function getInitialStandard(): NisaabStandard {
+function getInitialStandard(): NisaabStandard | null {
   try {
     const s = localStorage.getItem(STANDARD_KEY)
-    if (s === "gold" || s === "silver" || s === "lower") return s
-  } catch {}
-  return "lower"
+    const isManual = localStorage.getItem(STANDARD_OVERRIDE_KEY) === "true"
+    if (isManual && (s === "gold" || s === "silver" || s === "lower")) return s
+    // Preserve legacy explicit gold/silver selections; the old app also saved
+    // "lower" as its automatic default, so that value must follow the madhab.
+    if (s === "gold" || s === "silver") return s
+  } catch (error) {
+    console.error("Unable to load the saved Nisaab preference.", error)
+  }
+  return null
+}
+
+function getInitialHawl(): HawlData {
+  try {
+    const stored = localStorage.getItem(HAWL_KEY)
+    if (stored) {
+      const parsed: unknown = JSON.parse(stored)
+      if (
+        parsed &&
+        typeof parsed === "object" &&
+        "startDate" in parsed &&
+        typeof parsed.startDate === "string" &&
+        "fellBelowNisaab" in parsed &&
+        typeof parsed.fellBelowNisaab === "boolean"
+      ) {
+        return {
+          startDate: parsed.startDate,
+          fellBelowNisaab: parsed.fellBelowNisaab,
+        }
+      }
+      throw new Error("Saved hawl data has an invalid format.")
+    }
+  } catch (error) {
+    console.error("Unable to load saved hawl data.", error)
+  }
+  return EMPTY_HAWL
 }
 
 // ── Page component ───────────────────────────────────────────────────────────
 export function Calculate() {
   const t = useT()
   const { direction } = useTranslation()
+  const { madhab, madhabMeta } = useMadhab()
 
-  const [currency, setCurrency] = useState("GBP")
+  // Detect currency from user's IP; falls back to USD
+  const { currency: geoCurrency, loading: geoLoading } = useGeoLocation()
+
+  // Initialise from localStorage first (instant), then fall back to geo detection
+  const [currency, setCurrency] = useState<string>(() => {
+    try {
+      const stored = localStorage.getItem("zakaat_currency")
+      if (stored && (INVARIANT_CONSTANTS.currencies as readonly string[]).includes(stored)) return stored
+    } catch {}
+    return "GBP" // temporary until geo resolves
+  })
+
+  // Once geo resolves, apply it only when the user has no stored preference
+  useEffect(() => {
+    if (geoLoading) return
+    try {
+      if (!localStorage.getItem("zakaat_currency")) setCurrency(geoCurrency)
+    } catch {
+      setCurrency(geoCurrency)
+    }
+  }, [geoCurrency, geoLoading])
   const [values, setValues] = useState<AssetValues>(getInitialValues)
-  const [nisaabStandard, setNisaabStandard] = useState<NisaabStandard>(getInitialStandard)
+  const [nisaabOverride, setNisaabOverride] = useState<NisaabStandard | null>(getInitialStandard)
+  const [hawl, setHawl] = useState<HawlData>(getInitialHawl)
+  const nisaabStandard = nisaabOverride ?? madhabMeta.defaultNisaabStandard
 
   const { prices: nisaabPrices, status: priceStatus, lastUpdated, refresh: refreshPrices } =
     useMetalPrices(currency)
 
   // Persist form values
   useEffect(() => {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(values)) } catch {}
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(values))
+    } catch (error) {
+      console.error("Unable to save calculator data.", error)
+    }
   }, [values])
 
-  // Persist standard choice
   useEffect(() => {
-    try { localStorage.setItem(STANDARD_KEY, nisaabStandard) } catch {}
-  }, [nisaabStandard])
+    try {
+      if (nisaabOverride) localStorage.setItem(STANDARD_KEY, nisaabOverride)
+      else localStorage.removeItem(STANDARD_KEY)
+      if (nisaabOverride) localStorage.setItem(STANDARD_OVERRIDE_KEY, "true")
+      else localStorage.removeItem(STANDARD_OVERRIDE_KEY)
+    } catch (error) {
+      console.error("Unable to save the Nisaab preference.", error)
+    }
+  }, [nisaabOverride])
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(HAWL_KEY, JSON.stringify(hawl))
+    } catch (error) {
+      console.error("Unable to save hawl data.", error)
+    }
+  }, [hawl])
 
   const result = useMemo(
-    () => calculateZakaat(values, nisaabPrices, nisaabStandard),
-    [values, nisaabPrices, nisaabStandard],
+    () => calculateZakaat(values, nisaabPrices, nisaabStandard, madhab, hawl),
+    [values, nisaabPrices, nisaabStandard, madhab, hawl],
   )
 
   const currencySymbol = getCurrencySymbol(currency)
@@ -89,8 +206,14 @@ export function Calculate() {
     setValues((prev) => ({ ...prev, [id]: value }))
 
   const handleReset = () => {
-    setValues(getInitialValues())
-    localStorage.removeItem(STORAGE_KEY)
+    setValues(EMPTY_VALUES)
+    setHawl(EMPTY_HAWL)
+    try {
+      localStorage.removeItem(STORAGE_KEY)
+      localStorage.removeItem(HAWL_KEY)
+    } catch (error) {
+      console.error("Unable to clear saved calculator data.", error)
+    }
   }
 
   // ── Asset section definitions (icons decoupled from locale strings) ─────
@@ -110,8 +233,10 @@ export function Calculate() {
       label: t.calculate.sections.goldSilver.label,
       description: t.calculate.sections.goldSilver.description,
       fields: [
-        { id: "gold_grams",   label: t.calculate.sections.goldSilver.fields.goldGrams,   placeholder: t.calculate.placeholders.grams },
+        { id: "gold_grams", label: t.calculate.sections.goldSilver.fields.goldGrams, placeholder: t.calculate.placeholders.grams },
+        { id: "worn_gold_grams", label: t.calculate.sections.goldSilver.fields.wornGoldGrams, placeholder: t.calculate.placeholders.grams },
         { id: "silver_grams", label: t.calculate.sections.goldSilver.fields.silverGrams, placeholder: t.calculate.placeholders.grams },
+        { id: "worn_silver_grams", label: t.calculate.sections.goldSilver.fields.wornSilverGrams, placeholder: t.calculate.placeholders.grams },
       ],
     },
     {
@@ -120,6 +245,7 @@ export function Calculate() {
       description: t.calculate.sections.investments.description,
       fields: [
         { id: "stocks",  label: t.calculate.sections.investments.fields.stocks,  placeholder: t.calculate.placeholders.amount },
+        { id: "income_stocks", label: t.calculate.sections.investments.fields.incomeStocks, placeholder: t.calculate.placeholders.amount },
         { id: "crypto",  label: t.calculate.sections.investments.fields.crypto,  placeholder: t.calculate.placeholders.amount },
         { id: "pension", label: t.calculate.sections.investments.fields.pension, placeholder: t.calculate.placeholders.amount },
       ],
@@ -131,6 +257,7 @@ export function Calculate() {
       fields: [
         { id: "stock_inventory", label: t.calculate.sections.business.fields.stockInventory, placeholder: t.calculate.placeholders.amount },
         { id: "receivables",     label: t.calculate.sections.business.fields.receivables,     placeholder: t.calculate.placeholders.amount },
+        { id: "trade_real_estate", label: t.calculate.sections.business.fields.tradeRealEstate, placeholder: t.calculate.placeholders.amount },
       ],
     },
     {
@@ -174,16 +301,16 @@ export function Calculate() {
                   Blocked on choosing a flag source that covers all 10 currencies
                   without a large bundle overhead.
                 */}
-                <select
+                <Select
+                  name="currency"
                   value={currency}
-                  onChange={(e) => setCurrency(e.target.value)}
-                  className="rounded-xl border border-cream-300 bg-white px-4 py-2.5 text-sm text-charcoal-800 focus:outline-none focus:ring-2 focus:ring-sage-400"
-                  aria-label={t.calculate.currencyLabel}
-                >
-                  {INVARIANT_CONSTANTS.currencies.map((c) => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
-                </select>
+                  onChange={(val) => {
+                    setCurrency(val)
+                    try { localStorage.setItem("zakaat_currency", val) } catch {}
+                  }}
+                  options={INVARIANT_CONSTANTS.currencies.map((c) => ({ value: c, label: c }))}
+                  ariaLabel={t.calculate.currencyLabel}
+                />
               </Card>
             </RevealCard>
 
@@ -200,9 +327,25 @@ export function Calculate() {
             {/* Nisaab standard toggle */}
             <NisaabStandardToggle
               value={nisaabStandard}
-              onChange={setNisaabStandard}
+              onChange={setNisaabOverride}
               labels={t.calculate.nisaabStandard}
             />
+            <p className="rounded-xl border border-sage-100 bg-sage-50 px-4 py-3 text-xs leading-relaxed text-sage-800">
+              {t.calculate.schoolRules[madhab]}
+            </p>
+
+            {madhab !== "default" && (
+              <HawlEligibility
+                startDate={hawl.startDate}
+                fellBelowNisaab={hawl.fellBelowNisaab}
+                onStartDateChange={(startDate) => setHawl((prev) => ({ ...prev, startDate }))}
+                onFellBelowNisaabChange={(fellBelowNisaab) =>
+                  setHawl((prev) => ({ ...prev, fellBelowNisaab }))
+                }
+                labels={t.calculate.hawl}
+                madhab={madhab}
+              />
+            )}
 
             {/* Asset sections */}
             {sections.map((section, i) => (

@@ -47,7 +47,18 @@ export function AssetField({
           step="0.01"
           placeholder={placeholder}
           value={value || ""}
-          onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
+          onChange={(e) => {
+            const input = e.currentTarget
+            if (input.value === "") {
+              onChange(0)
+              return
+            }
+            if (!input.checkValidity() || !Number.isFinite(input.valueAsNumber)) {
+              input.reportValidity()
+              return
+            }
+            onChange(input.valueAsNumber)
+          }}
           className={cn(
             "w-full rounded-xl border border-cream-300 bg-white py-3 text-sm text-charcoal-800",
             "placeholder:text-charcoal-300 focus:outline-none focus:ring-2 focus:ring-sage-400",
