@@ -7,8 +7,8 @@
 export const INVARIANT_CONSTANTS = {
   contact: {
     email: "hello@zakaatcalculator.app",
-    location: "London, United Kingdom",
-    responseTime: "Within 2–3 business days",
+    location: "Hyderabad, India",
+    responseTime: "Within 2-3 business days",
   },
   
   social: {

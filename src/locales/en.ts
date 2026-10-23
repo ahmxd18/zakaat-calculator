@@ -2,6 +2,7 @@
  * en.ts
  * English translations (default language)
  */
+import type { HadithKey, QuranNoteKey, QuranVerseKey } from "../data/references"
 
 export const en = {
   meta: {
@@ -298,12 +299,27 @@ export const en = {
       },
     },
     
-    teamEyebrow: "The people behind it",
-    teamHeading: "Meet the Team",
-    teamSubheading: "A cross-disciplinary group of scholars, developers, and designers united by a shared purpose.",
-    teamPlaceholderWarning: "⚠️ Placeholder Content: Team member information below is placeholder content pending real team details. Do not treat these as real individuals.",
+    reviewEyebrow: "Scholarly review",
+    reviewHeading: "A review process in progress",
+    reviewSubheading: "We are seeking qualified scholars to review the calculator’s methodology, calculations, and citations before presenting any reviewer as an endorser.",
+    reviewNotice: "No scholars have reviewed or approved this website yet. Every profile below is fictional sample content: names, locations, school affiliations, and initials are illustrative only. They are not real reviewers and do not represent endorsements.",
+    sampleProfile: "Fictional sample",
+    jurisprudence: "School",
+    location: "Sample location",
+    schools: {
+      hanafi: "Hanafi (sample)",
+      maliki: "Maliki (sample)",
+      shafii: "Shafi'i (sample)",
+      hanbali: "Hanbali (sample)",
+      independent: "Not specified (sample)",
+    },
+    creatorLabel: "About the creator",
+    creatorRole: "Developer & creator · Web development · React / Next.js",
+    creatorBio: "I'm a software developer passionate about building meaningful digital experiences that solve real-world problems. I created this Zakaat calculator to use my technical skills in service of the Muslim community, making Zakaat calculations easier to understand and more accessible. My focus is thoughtful design, transparent calculations, and carefully researched Islamic references. This is a software project, not a claim to religious authority; its content still needs review by qualified scholars.",
+    creatorSkills: ["Software development", "UI/UX design", "Innovation", "Islamic technology"],
+    portraitComingSoon: "Portrait coming soon",
     
-    disclaimerWarning: "⚠️ This calculator is provided for educational purposes only. All rulings are based on mainstream scholarly positions. For personal Zakaat queries, please consult a qualified Islamic scholar.",
+    disclaimerWarning: "This calculator is an educational tool, not a religious authority. No qualified scholars have reviewed or approved its calculations or citations yet. Please consult a qualified scholar for personal guidance.",
   },
   
   contact: {
@@ -392,12 +408,60 @@ export const en = {
       contemporary: "Contemporary Scholarship",
     },
     
+    translationLabel: "Meaning in English",
+    translationNote: "Qur’an and Hadith meanings are concise explanatory renderings prepared for this page, not quotations from a named published translation. Consult trusted sources for detailed study.",
+    quranSource: "Arabic text cross-checked against the Quran Academy Uthmani edition served by AlQuran.cloud.",
+    readVerse: "Read verse",
+    quranTranslations: {
+      alBaqarah43: "Establish prayer, give zakah, and bow with those who bow.",
+      alBaqarah110: "Establish prayer and give zakah. Whatever good you send ahead for yourselves, you will find it with Allah. Allah sees all that you do.",
+      alBaqarah267: "Believers, give from the good things you have earned and from what We have brought forth for you from the earth. Do not choose the inferior of it to give when you would not accept it yourselves except with reluctance. Know that Allah is self-sufficient and worthy of praise.",
+      atTawbah60: "Zakah is for the poor, the needy, those who administer it, those whose hearts are to be reconciled, freeing people from bondage, those in debt, in Allah’s cause, and the traveller in need—a duty prescribed by Allah. Allah is all-knowing, wise.",
+      atTawbah71: "Believing men and women support one another: they encourage what is right, discourage what is wrong, establish prayer, give zakah, and obey Allah and His Messenger. Allah will show them mercy. Allah is mighty and wise.",
+      atTawbah103: "Take charity from their wealth to cleanse and purify them by it, and pray for them; your prayer brings them reassurance. Allah is all-hearing, all-knowing.",
+      anNur56: "Establish prayer, give zakah, and obey the Messenger so that you may receive mercy.",
+      arRum39: "Whatever you give as interest to increase through people’s wealth does not increase with Allah; but what you give as zakah, seeking Allah’s pleasure—those are the ones whose reward is multiplied.",
+    } satisfies Record<QuranVerseKey, string>,
+    quranNotes: {
+      generalGiving: "This verse speaks broadly about giving from good earnings and produce; it is relevant to charitable giving but does not by itself define all Zakah rules.",
+      zakahMeaning: "The term and its context have been interpreted in different ways; this concise rendering is not a legal ruling.",
+    } satisfies Record<QuranNoteKey, string>,
+    hadithMeaningLabel: "Concise meaning in English",
+    hadithTranslations: {
+      bukhari1395: "The Prophet instructed Mu'adh to teach that Zakah is obligatory on wealth, collected from the wealthy and returned to the poor.",
+      bukhari1403: "The Prophet warned that one who withholds the Zakah due on wealth will face it on the Day of Resurrection, declaring, “I am your wealth; I am your treasure.”",
+      bukhari1448: "When the prescribed camel for Zakah was unavailable, the collector could accept the next age category with a specified adjustment.",
+      bukhari1450: "Abu Bakr's instructions prohibit combining separately owned livestock or splitting jointly owned livestock to manipulate the Zakah assessment.",
+      bukhari1454: "Abu Bakr's written instructions set out detailed Zakah amounts for camels and sheep, and state that the due on silver is one-fortieth (2.5%).",
+      bukhari1460: "The Prophet warned that livestock for which Zakah was withheld will be brought on the Day of Resurrection and trample or strike its owner.",
+      muslim979a: "No Zakah is due on less than five wasqs of produce, five camels, or five uqiyyahs of silver.",
+      muslim987a: "A lengthy narration warns of the punishment for withholding the due Zakah on gold, silver, camels, cattle, and sheep.",
+      tirmidhi617: "Abu Dharr relates a warning about withholding Zakah on camels and cattle: they will come on the Day of Judgment and trample and strike their owner.",
+      tirmidhi618: "The Prophet said that when a person pays the Zakah due on their wealth, they have fulfilled what is required of them.",
+    } satisfies Record<HadithKey, string>,
+    authenticityGrades: {
+      sahih: "Sahih",
+      hasan: "Hasan",
+      gharib: "Gharib",
+      mashhur: "Mashhur",
+    },
+    readHadith: "Read hadith",
+    hadithFilterLabel: "Filter by grade or narration type",
+    fiqhFilterLabel: "Filter by school",
+    filterAll: "All",
+    madhhabs: {
+      hanafi: "Hanafi",
+      maliki: "Maliki",
+      shafii: "Shafi'i",
+      hanbali: "Hanbali",
+    },
+    noFilterResults: "No references match this filter.",
     methodologyHeading: "Our Methodology",
     methodologyText: "Selecting a madhab applies its Nisāb recommendation and the school-specific rules shown on the calculator, including jewellery, debt, and hawl treatment. Nisāb can be overridden, and Default (No School) remains available. These calculations are estimates based on a research reference; consult a qualified scholar for personal rulings.",
     methodologyLink: "Spot an error or have a scholarly correction?",
     methodologyLinkText: "Contact our Fiqh committee →",
     
-    verificationWarning: "⚠️ Verification Notice: All Hadith citations (book and number) are pending scholarly verification against verified sources (e.g., sunnah.com). Do not rely on exact citation numbers until independently confirmed.",
+    verificationWarning: "These references and concise meanings are provided for educational study; they are not a scholarly approval of the calculator. Consult a qualified scholar for personal rulings.",
   },
   
   notFound: {

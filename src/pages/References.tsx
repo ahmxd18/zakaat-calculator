@@ -4,44 +4,58 @@
  */
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen, Scroll, Library, GraduationCap, Quote, StickyNote } from "lucide-react";
+import { BookOpen, Scroll, Library, GraduationCap, Quote, StickyNote, ExternalLink, type LucideIcon } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useT } from "../contexts/i18n";
+import { useTranslation } from "../contexts/i18n";
+import type { Translations } from "../locales/en";
+import {
+  REFERENCE_CATEGORIES,
+  type HadithClassification,
+  type Madhhab,
+  type ReferenceCategory,
+  type ReferenceItem,
+} from "../data/references";
 import { RevealCard }    from "../components/ui/Card";
 import { SectionHeader } from "../components/ui/SectionHeader";
 import { Container }     from "../components/layout/Container";
 import { PageLayout }    from "../components/layout/PageLayout";
 import { LAYOUT }        from "../constants/layout";
 
-type Category = {
-  id: string;
-  label: string;
-  icon: string;
-  refs: Array<{
-    ref: string;
-    text: string;
-    arabic?: string;
-    note?: string;
-  }>;
-};
-
-const CategoryIcon: Record<string, React.FC<{ className?: string }>> = {
-  book:             ({ className }) => <BookOpen      className={className} />,
-  scroll:           ({ className }) => <Scroll        className={className} />,
-  library:          ({ className }) => <Library       className={className} />,
-  "graduation-cap": ({ className }) => <GraduationCap className={className} />,
+const CategoryIcon: Record<ReferenceCategory["icon"], LucideIcon> = {
+  book: BookOpen,
+  scroll: Scroll,
+  library: Library,
+  "graduation-cap": GraduationCap,
 };
 
 function ReferenceCard({
   ref: refData,
   index,
+  language,
+  labels,
 }: {
-  ref: Category["refs"][number];
+  ref: ReferenceItem;
   index: number;
+  language: string;
+  labels: Pick<
+    Translations["references"],
+    | "translationLabel"
+    | "quranTranslations"
+    | "quranNotes"
+    | "readVerse"
+    | "hadithTranslations"
+    | "hadithMeaningLabel"
+    | "authenticityGrades"
+    | "readHadith"
+    | "madhhabs"
+  >;
 }) {
   return (
-    <RevealCard delay={index * 0.07}>
-      <div className="rounded-2xl bg-white border border-cream-200 p-6 sm:p-8 space-y-4 shadow-sm hover:border-sage-200 hover:shadow-md transition-all duration-200">
+    <RevealCard
+      delay={index * 0.07}
+      className="mb-6 inline-block w-full break-inside-avoid align-top"
+    >
+      <article className="space-y-4 rounded-2xl border border-cream-200 bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-sage-200 hover:shadow-lg sm:p-8">
         {/* Reference ID */}
         <div className="flex items-start justify-between gap-3">
           <span className="inline-block rounded-xl bg-sage-100 border border-sage-200 px-3 py-1 text-xs font-semibold text-sage-700">
@@ -50,80 +64,136 @@ function ReferenceCard({
           <Quote className="h-5 w-5 text-cream-300 shrink-0 mt-0.5" />
         </div>
 
-        {/* Arabic text if present */}
-        {refData.arabic && (
-          <div
-            dir="rtl"
-            lang="ar"
-            className="text-right text-xl sm:text-2xl text-charcoal-700 leading-loose font-light py-2 border-y border-cream-100"
-            style={{ fontFamily: "serif" }}
-          >
-            {refData.arabic}
-          </div>
+        {refData.type === "quran" ? (
+          <>
+            <div
+              dir="rtl"
+              lang="ar"
+              className="border-y border-cream-100 py-3 text-right text-xl font-light leading-loose text-charcoal-700 sm:text-2xl"
+              style={{ fontFamily: "serif" }}
+            >
+              {refData.arabic}
+            </div>
+            <div className="space-y-2">
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-sage-700">
+                {labels.translationLabel}
+              </p>
+              <p
+                dir={language === "ar" || language === "ur" ? "rtl" : "ltr"}
+                lang={language}
+                className="text-sm leading-relaxed text-charcoal-600 sm:text-base"
+              >
+                {labels.quranTranslations[refData.id]}
+              </p>
+            </div>
+            {refData.noteKey && (
+              <p className="flex items-start gap-1.5 border-t border-cream-100 pt-3 text-xs leading-relaxed text-charcoal-400">
+                <StickyNote className="mt-0.5 h-3.5 w-3.5 shrink-0 text-charcoal-300" />
+                {labels.quranNotes[refData.noteKey]}
+              </p>
+            )}
+            <a
+              href={refData.sourceUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-sage-700 underline decoration-sage-300 underline-offset-2 hover:text-sage-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage-400"
+            >
+              {labels.readVerse}
+              <ExternalLink aria-hidden="true" className="h-3.5 w-3.5" />
+            </a>
+          </>
+        ) : refData.type === "hadith" ? (
+          <>
+            <div className="flex flex-wrap gap-2">
+              {refData.classifications.map((classification) => (
+                <span
+                  key={classification}
+                  className="inline-flex rounded-full border border-sage-200 bg-sage-50 px-2.5 py-1 text-xs font-semibold text-sage-700"
+                >
+                  {labels.authenticityGrades[classification]}
+                </span>
+              ))}
+            </div>
+            <div className="space-y-2">
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-sage-700">
+                {labels.hadithMeaningLabel}
+              </p>
+              <p
+                dir={language === "ar" || language === "ur" ? "rtl" : "ltr"}
+                lang={language}
+                className="text-sm leading-relaxed text-charcoal-600 sm:text-base"
+              >
+                {labels.hadithTranslations[refData.id]}
+              </p>
+            </div>
+            <a
+              href={refData.sourceUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-sage-700 underline decoration-sage-300 underline-offset-2 hover:text-sage-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage-400"
+            >
+              {labels.readHadith}
+              <ExternalLink aria-hidden="true" className="h-3.5 w-3.5" />
+            </a>
+          </>
+        ) : (
+          <>
+            {refData.type === "fiqh" && (
+              <span className="inline-flex rounded-full border border-sage-200 bg-sage-50 px-2.5 py-1 text-xs font-semibold text-sage-700">
+                {labels.madhhabs[refData.madhhab]}
+              </span>
+            )}
+            <p className="text-sm italic leading-relaxed text-charcoal-600 sm:text-base">
+              {refData.text}
+            </p>
+            {refData.type === "text" && refData.note && (
+              <p className="flex items-start gap-1.5 border-t border-cream-100 pt-3 text-xs leading-relaxed text-charcoal-400">
+                <StickyNote className="mt-0.5 h-3.5 w-3.5 shrink-0 text-charcoal-300" />
+                {refData.note}
+              </p>
+            )}
+          </>
         )}
-
-        {/* Translation / text */}
-        <p className="text-sm sm:text-base text-charcoal-600 leading-relaxed italic">
-          {refData.text}
-        </p>
-
-        {/* Scholar note */}
-        {refData.note && (
-          <p className="text-xs text-charcoal-400 leading-relaxed border-t border-cream-100 pt-3 flex items-start gap-1.5">
-            <StickyNote className="h-3.5 w-3.5 shrink-0 mt-0.5 text-charcoal-300" />
-            {refData.note}
-          </p>
-        )}
-      </div>
+      </article>
     </RevealCard>
   );
 }
 
 export function References() {
-  const t = useT();
-  
-  const categories: Category[] = [
-    {
-      id: "quran",
-      label: t.references.categories.quran,
-      icon: "book",
-      refs: [
-        { ref: "Qur'an 2:110", text: "And establish prayer and give Zakah, and whatever good you put forward for yourselves — you will find it with Allah.", arabic: "وَأَقِيمُوا ٱلصَّلوٰةَ وَءَاتُوا ٱلزَّكوٰةَ" },
-        { ref: "Qur'an 9:60", text: "Zakah expenditures are only for the poor, the needy, those employed to collect [Zakah], for bringing hearts together [for Islam], for freeing captives, for those in debt, for the cause of Allah, and for the [stranded] traveler.", arabic: "إِنَّمَا ٱلصَّدَقـٰتُ لِلْفُقَرَآءِ وَٱلْمَسـٰكِينِ" },
-      ],
-    },
-    {
-      id: "hadith",
-      label: t.references.categories.hadith,
-      icon: "scroll",
-      refs: [
-        { ref: "Sahih al-Bukhari 1395", text: "Islam is built on five pillars: testifying that there is no god but Allah and Muhammad is His Messenger, establishing prayer, giving Zakah, fasting Ramadan, and pilgrimage to the House.", note: "Hadith numbers pending verification" },
-        { ref: "Sahih Muslim 987", text: "On every 40 sheep, there is one sheep [due in Zakah]. On every 5 camels, there is one sheep [due in Zakah].", note: "Hadith numbers pending verification" },
-      ],
-    },
-    {
-      id: "fiqh",
-      label: t.references.categories.fiqh,
-      icon: "library",
-      refs: [
-        { ref: "Al-Hidayah (Hanafi)", text: "The Nisaab for gold is 20 Dinars (approximately 85 grams). For silver, it is 200 Dirhams (approximately 595 grams). Zakah is due at 2.5% on wealth above this threshold held for one lunar year." },
-        { ref: "Reliance of the Traveller (Shafi'i)", text: "Zakah on trade goods is calculated based on their current market value at the end of the Hawl, regardless of original purchase price." },
-      ],
-    },
-    {
-      id: "contemporary",
-      label: t.references.categories.contemporary,
-      icon: "graduation-cap",
-      refs: [
-        { ref: "AAOIFI Shari'ah Standards", text: "Contemporary Islamic finance institutions follow AAOIFI standards for calculating Zakah on investment funds, which require purifying returns from impermissible income sources." },
-        { ref: "Islamic Fiqh Council (OIC)", text: "The Council has ruled that cryptocurrency is subject to Zakah as it falls under the category of trade assets, with Zakah due at 2.5% of market value." },
-      ],
-    },
+  const { translations: t, language } = useTranslation();
+  const categories = REFERENCE_CATEGORIES.map((category) => ({
+    ...category,
+    label: t.references.categories[category.id],
+  }));
+  const [activeId, setActiveId] = useState<ReferenceCategory["id"]>("quran");
+  const [hadithFilter, setHadithFilter] = useState<HadithClassification | "all">("all");
+  const [fiqhFilter, setFiqhFilter] = useState<Madhhab | "all">("all");
+  const activeCategory = categories.find((category) => category.id === activeId);
+  if (!activeCategory) throw new Error(`Reference category "${activeId}" is missing.`);
+  const referenceItems: readonly ReferenceItem[] = activeCategory.refs;
+  const visibleReferences = referenceItems.filter((ref) => {
+    if (activeId === "hadith" && hadithFilter !== "all") {
+      return ref.type === "hadith" && ref.classifications.includes(hadithFilter);
+    }
+    if (activeId === "fiqh" && fiqhFilter !== "all") {
+      return ref.type === "fiqh" && ref.madhhab === fiqhFilter;
+    }
+    return true;
+  });
+  const hadithFilters: readonly (HadithClassification | "all")[] = [
+    "all",
+    "sahih",
+    "hasan",
+    "gharib",
+    "mashhur",
   ];
-  
-  const [activeId, setActiveId] = useState<string>(categories[0].id);
-
-  const activeCategory = categories.find(c => c.id === activeId)!;
+  const fiqhFilters: readonly (Madhhab | "all")[] = [
+    "all",
+    "hanafi",
+    "maliki",
+    "shafii",
+    "hanbali",
+  ];
 
   return (
     <PageLayout>
@@ -143,7 +213,7 @@ export function References() {
       <section className={`py-6 bg-cream-50 border-b border-cream-200 sticky ${LAYOUT.STICKY_TOP} z-30`}>
         <Container>
           <div className="flex items-center gap-2 overflow-x-auto pb-1">
-            {categories.map(cat => {
+            {categories.map((cat) => {
               const Icon = CategoryIcon[cat.icon];
               const isActive = activeId === cat.id;
               return (
@@ -157,7 +227,7 @@ export function References() {
                       : "bg-white border border-cream-200 text-charcoal-600 hover:border-sage-200 hover:text-sage-700"
                   }`}
                 >
-                  {Icon && <Icon className="h-4 w-4" />}
+                  <Icon className="h-4 w-4" />
                   {cat.label}
                 </motion.button>
               );
@@ -166,15 +236,21 @@ export function References() {
         </Container>
       </section>
 
-      {/* ── References grid ── */}
+      {/* ── References masonry ── */}
       <section className="py-12 sm:py-16">
         <Container>
-          {/* Verification disclaimer */}
+          {/* Scholarly review note */}
           <div className="mb-8 rounded-xl bg-blush-50 border border-blush-200 p-4">
             <p className="text-xs text-blush-700 leading-relaxed">
               {t.references.verificationWarning}
             </p>
           </div>
+
+          {activeId === "quran" && (
+            <p className="mb-6 text-xs leading-relaxed text-charcoal-500">
+              {t.references.quranSource} {t.references.translationNote}
+            </p>
+          )}
           
           {/* Category heading */}
           <motion.div
@@ -192,6 +268,62 @@ export function References() {
             <div className="h-1 w-16 bg-sage-400 rounded-full mt-2" />
           </motion.div>
 
+          {activeId === "hadith" && (
+            <div className="mb-8">
+              <p className="mb-3 text-sm font-medium text-charcoal-600">
+                {t.references.hadithFilterLabel}
+              </p>
+              <div className="flex flex-wrap gap-2" role="group" aria-label={t.references.hadithFilterLabel}>
+                {hadithFilters.map((filter) => {
+                  const isActive = hadithFilter === filter;
+                  return (
+                    <button
+                      key={filter}
+                      type="button"
+                      aria-pressed={isActive}
+                      onClick={() => setHadithFilter(filter)}
+                      className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                        isActive
+                          ? "border-sage-600 bg-sage-600 text-cream-50"
+                          : "border-cream-300 bg-white text-charcoal-600 hover:border-sage-300 hover:text-sage-700"
+                      }`}
+                    >
+                      {filter === "all" ? t.references.filterAll : t.references.authenticityGrades[filter]}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {activeId === "fiqh" && (
+            <div className="mb-8">
+              <p className="mb-3 text-sm font-medium text-charcoal-600">
+                {t.references.fiqhFilterLabel}
+              </p>
+              <div className="flex flex-wrap gap-2" role="group" aria-label={t.references.fiqhFilterLabel}>
+                {fiqhFilters.map((filter) => {
+                  const isActive = fiqhFilter === filter;
+                  return (
+                    <button
+                      key={filter}
+                      type="button"
+                      aria-pressed={isActive}
+                      onClick={() => setFiqhFilter(filter)}
+                      className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                        isActive
+                          ? "border-sage-600 bg-sage-600 text-cream-50"
+                          : "border-cream-300 bg-white text-charcoal-600 hover:border-sage-300 hover:text-sage-700"
+                      }`}
+                    >
+                      {filter === "all" ? t.references.filterAll : t.references.madhhabs[filter]}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           <AnimatePresence mode="wait">
             <motion.div
               key={activeId}
@@ -199,11 +331,21 @@ export function References() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.3 }}
-              className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+              className="columns-1 gap-6 md:columns-2 2xl:columns-3"
             >
-              {activeCategory.refs.map((ref, i) => (
-                <ReferenceCard key={ref.ref} ref={ref} index={i} />
-              ))}
+              {visibleReferences.length > 0 ? visibleReferences.map((ref, i) => (
+                <ReferenceCard
+                  key={ref.id}
+                  ref={ref}
+                  index={i}
+                  language={language}
+                  labels={t.references}
+                />
+              )) : (
+                <p className="mb-6 rounded-xl border border-cream-200 bg-white p-6 text-sm text-charcoal-500">
+                  {t.references.noFilterResults}
+                </p>
+              )}
             </motion.div>
           </AnimatePresence>
         </Container>
