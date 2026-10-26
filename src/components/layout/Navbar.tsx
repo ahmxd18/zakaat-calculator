@@ -62,7 +62,7 @@ export function Navbar() {
             : "bg-transparent"
         )}
       >
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 sm:h-18 items-center justify-between gap-4">
 
             {/* ── Brand ── */}
@@ -93,7 +93,7 @@ export function Navbar() {
             </Link>
 
             {/* ── Desktop nav ── */}
-            <nav className="hidden lg:flex items-center gap-1" aria-label="Main navigation">
+            <nav className="hidden xl:flex items-center gap-1" aria-label="Main navigation">
               {[
                 { label: t.nav.links.home, path: '/' },
                 { label: t.nav.links.calculate, path: '/calculate' },
@@ -142,7 +142,7 @@ export function Navbar() {
                   aria-label={t.nav.schoolLabel}
                 >
                   <BookOpen className="h-4 w-4" />
-                  <span className="hidden xl:inline">
+                  <span className="hidden 2xl:inline">
                     {t.nav.schoolNames[madhab]}
                   </span>
                   <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", madhabOpen && "rotate-180")} />
@@ -187,7 +187,7 @@ export function Navbar() {
                   aria-label={t.nav.languageLabel}
                 >
                   <Languages className="h-4 w-4" />
-                  <span className="hidden xl:inline">{LANGUAGES.find(l => l.code === language)?.label}</span>
+                  <span className="hidden 2xl:inline">{LANGUAGES.find(l => l.code === language)?.label}</span>
                   <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", langOpen && "rotate-180")} />
                 </button>
                 
@@ -225,7 +225,7 @@ export function Navbar() {
                 </AnimatePresence>
               </div>
               
-              <Link to="/calculate" className="hidden lg:block">
+              <Link to="/calculate" className="hidden 2xl:block">
                 <Button variant="primary" size="sm">
                   {t.nav.ctaLabel}
                 </Button>
@@ -239,7 +239,7 @@ export function Navbar() {
               aria-label={isOpen ? "Close menu" : "Open menu"}
               aria-expanded={isOpen}
               className={cn(
-                "lg:hidden flex items-center justify-center",
+                "xl:hidden flex items-center justify-center",
                 "h-10 w-10 rounded-xl",
                 "text-charcoal-700 hover:bg-sage-50",
                 "transition-colors duration-150"
@@ -285,7 +285,7 @@ export function Navbar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 z-40 bg-charcoal-900/40 backdrop-blur-sm lg:hidden"
+              className="fixed inset-0 z-40 bg-charcoal-900/40 backdrop-blur-sm xl:hidden"
               onClick={() => setIsOpen(false)}
             />
 
@@ -299,7 +299,7 @@ export function Navbar() {
               className={cn(
                 "fixed top-0 bottom-0 z-50 w-[min(320px,85vw)]",
                 direction === 'rtl' ? 'start-0' : 'end-0',
-                "bg-cream-50 shadow-xl lg:hidden",
+                "bg-cream-50 shadow-xl xl:hidden",
                 "flex flex-col"
               )}
             >

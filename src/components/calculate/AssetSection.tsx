@@ -3,15 +3,15 @@
  * Collapsible accordion panel containing a group of AssetFields.
  * Accepts a Lucide icon component instead of an emoji string.
  */
-import { useState } from "react"
+import { useState, useId } from "react"
 import { motion } from "framer-motion"
 import { ChevronDown, type LucideIcon } from "lucide-react"
 import { Card } from "../ui/Card"
 import { AssetField } from "./AssetField"
-import type { AssetValues } from "../../utils/zakaat"
+import type { AssetValues, AssetKey } from "../../utils/zakaat"
 
 export interface AssetSectionField {
-  id: string
+  id: AssetKey
   label: string
   placeholder: string
 }
@@ -24,7 +24,9 @@ export interface AssetSectionProps {
   index: number
   currencySymbol: string
   values: AssetValues
-  onChange: (id: string, value: number) => void
+  onChange: (id: AssetKey, value: number) => void
+  onValidityChange?: (id: AssetKey, valid: boolean) => void
+  invalidMessage?: string
   direction: "ltr" | "rtl"
 }
 
@@ -38,7 +40,10 @@ export function AssetSection({
   values,
   onChange,
   direction,
+  onValidityChange,
+  invalidMessage,
 }: AssetSectionProps) {
+  const panelId = useId()
   const [open, setOpen] = useState(index === 0)
 
   return (
@@ -53,6 +58,7 @@ export function AssetSection({
           onClick={() => setOpen((prev) => !prev)}
           className="w-full flex items-center justify-between gap-4 px-6 py-5 text-start hover:bg-cream-50 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage-400 focus-visible:ring-inset"
           aria-expanded={open}
+          aria-controls={panelId}
         >
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-sage-100 text-sage-600">
@@ -73,6 +79,8 @@ export function AssetSection({
         </button>
 
         <motion.div
+          id={panelId}
+          inert={!open}
           initial={false}
           animate={{ height: open ? "auto" : 0, opacity: open ? 1 : 0 }}
           transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
@@ -87,10 +95,12 @@ export function AssetSection({
                   id={field.id}
                   label={field.label}
                   placeholder={field.placeholder}
-                  currencySymbol={currencySymbol}
+                  currencySymbol={field.id.endsWith("_grams") ? "g" : currencySymbol}
                   value={values[field.id] || 0}
                   onChange={(val) => onChange(field.id, val)}
                   direction={direction}
+                  onValidityChange={(valid) => onValidityChange?.(field.id, valid)}
+                  invalidMessage={invalidMessage}
                 />
               ))}
             </div>

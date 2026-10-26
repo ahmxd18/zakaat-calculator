@@ -1,139 +1,45 @@
-/**
- * useMetalPrices.ts
- * Custom hook that fetches live gold/silver prices and caches them for 1 hour.
- * No external dependencies — plain React hooks only.
- */
-
-import { useState, useEffect, useCallback, useRef } from "react";
-import { fetchMetalPrices, FALLBACK_PRICES, type MetalPrices } from "../services/metalPrices";
-
-const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
-
-interface CacheEntry {
-  data: MetalPrices;
-  fetchedAt: number;
-}
-
-interface PriceResult extends CacheEntry {
-  currency: string;
-  status: PriceStatus;
-}
-
-/** In-memory cache shared across all hook instances */
-const cache = new Map<string, CacheEntry>();
-
-export type PriceStatus = "loading" | "live" | "fallback" | "error";
-
-interface UseMetalPricesResult {
-  prices: MetalPrices;
-  status: PriceStatus;
-  lastUpdated: Date | null;
-  refresh: () => void;
-}
-
-export function useMetalPrices(currency: string): UseMetalPricesResult {
-  const [result, setResult] = useState<PriceResult>({
-    currency,
-    data: FALLBACK_PRICES,
-    fetchedAt: 0,
-    status: "loading",
-  });
-  const abortRef = useRef<AbortController | null>(null);
-  const requestIdRef = useRef(0);
-
-  const load = useCallback(
-    async (force = false) => {
-      abortRef.current?.abort();
-      const controller = new AbortController();
-      abortRef.current = controller;
-      const requestId = ++requestIdRef.current;
-      const isCurrentRequest = () =>
-        requestIdRef.current === requestId && !controller.signal.aborted;
-
-      const cacheKey = currency;
-      const cached = cache.get(cacheKey);
-      const now = Date.now();
-
-      // Serve from cache if still fresh and not forced
-      if (!force && cached && now - cached.fetchedAt < CACHE_TTL_MS) {
-        setResult({ currency, ...cached, status: "live" });
-        return;
-      }
-
-      // Check if API key is even configured
-      const apiKey = import.meta.env.VITE_GOLD_API_KEY;
-      if (!apiKey) {
-        setResult({
-          currency,
-          data: FALLBACK_PRICES,
-          fetchedAt: 0,
-          status: "fallback",
-        });
-        return;
-      }
-
-      setResult({
-        currency,
-        data: FALLBACK_PRICES,
-        fetchedAt: 0,
-        status: "loading",
-      });
-
-      try {
-        const data = await fetchMetalPrices(currency, controller.signal);
-        if (!isCurrentRequest()) return;
-
-        const fetchedAt = Date.now();
-
-        // Detect if we got actual live data or silent fallback
-        const isLive =
-          data.goldPricePerGram !== FALLBACK_PRICES.goldPricePerGram ||
-          data.silverPricePerGram !== FALLBACK_PRICES.silverPricePerGram;
-
-        cache.set(cacheKey, { data, fetchedAt });
-        setResult({
-          currency,
-          data,
-          fetchedAt,
-          status: isLive ? "live" : "fallback",
-        });
-      } catch {
-        if (isCurrentRequest()) {
-          setResult({
-            currency,
-            data: FALLBACK_PRICES,
-            fetchedAt: 0,
-            status: "error",
-          });
-        }
-      }
-    },
-    [currency],
-  );
-
-  // Reload when currency changes
+import { useState, useEffect, useCallback, useRef } from "react"
+import { fetchMetalPrices, validateQuote, type PriceQuote } from "../services/metalPrices"
+export type PriceStatus = "loading" | "live" | "error"
+const cache = new Map<string, PriceQuote>()
+export function useMetalPrices(currency: string) {
+  const [result, setResult] = useState<{ currency: string; quote: PriceQuote | null; status: PriceStatus }>({ currency, quote: null, status: "loading" })
+  const [tick, setTick] = useState(0)
+  const requestId = useRef(0)
   useEffect(() => {
-    void load();
-    return () => {
-      abortRef.current?.abort();
-      requestIdRef.current += 1;
-    };
-  }, [load]);
-
-  const refresh = useCallback(() => {
-    cache.delete(currency);
-    void load(true);
-  }, [currency, load]);
-
-  const currentResult =
-    result.currency === currency
-      ? result
-      : { data: FALLBACK_PRICES, fetchedAt: 0, status: "loading" as const };
-
-  return {
-    prices: currentResult.data,
-    status: currentResult.status,
-    lastUpdated: currentResult.fetchedAt ? new Date(currentResult.fetchedAt) : null,
-    refresh,
-  };
+    const controller = new AbortController()
+    const id = ++requestId.current
+    const requestTimeout = setTimeout(() => {
+      controller.abort()
+      if (id === requestId.current) setResult({ currency, quote: null, status: "error" })
+    }, 15_000)
+    let timer: ReturnType<typeof setTimeout>
+    const commit = (quote: PriceQuote) => {
+      clearTimeout(requestTimeout)
+      setResult({ currency, quote, status: "live" })
+      timer = setTimeout(() => setTick(t => t + 1), Math.max(1, quote.expiresAt - Date.now()))
+    }
+    const load = async () => {
+      const cached = cache.get(currency)
+      if (cached) {
+        try { commit(validateQuote(cached, currency)); return } catch { cache.delete(currency) }
+      }
+      setResult({ currency, quote: null, status: "loading" })
+      try {
+        const quote = await fetchMetalPrices(currency, controller.signal)
+        if (controller.signal.aborted || id !== requestId.current) return
+        cache.set(currency, quote)
+        commit(quote)
+      } catch {
+        clearTimeout(requestTimeout)
+        if (!controller.signal.aborted && id === requestId.current) setResult({ currency, quote: null, status: "error" })
+      }
+    }
+    void load()
+    return () => { controller.abort(); clearTimeout(timer); clearTimeout(requestTimeout) }
+  }, [currency, tick])
+  const refresh = useCallback(() => { cache.delete(currency); setTick(t => t + 1) }, [currency])
+  const current = result.currency === currency ? result : { quote: null, status: "loading" as const }
+  const quote = current.quote && current.quote.expiresAt > Date.now() ? current.quote : null
+  return { prices: quote?.prices ?? null, status: quote ? current.status : current.status === "live" ? "loading" as const : current.status, lastUpdated: quote ? new Date(quote.updatedAt) : null, refresh }
 }

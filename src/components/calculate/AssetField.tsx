@@ -2,6 +2,8 @@
  * AssetField.tsx
  * A single currency number input with a floating symbol prefix/suffix.
  */
+import { useState, useEffect } from "react"
+import { MAX_INPUT } from "../../utils/zakaat"
 import { cn } from "../../utils/cn"
 
 export interface AssetFieldProps {
@@ -11,6 +13,8 @@ export interface AssetFieldProps {
   currencySymbol: string
   value: number
   onChange: (value: number) => void
+  onValidityChange?: (valid: boolean) => void
+  invalidMessage?: string
   direction: "ltr" | "rtl"
 }
 
@@ -22,7 +26,12 @@ export function AssetField({
   value,
   onChange,
   direction,
+  onValidityChange,
+  invalidMessage,
 }: AssetFieldProps) {
+  const [draft, setDraft] = useState(value ? String(value) : "")
+  const [invalid, setInvalid] = useState(false)
+  useEffect(() => { setDraft(value ? String(value) : "") }, [value])
   return (
     <div className="space-y-1.5">
       <label
@@ -44,20 +53,19 @@ export function AssetField({
           id={id}
           type="number"
           min="0"
-          step="0.01"
+          max={MAX_INPUT}
+          step="any"
           placeholder={placeholder}
-          value={value || ""}
+          value={draft}
+          aria-invalid={invalid}
+          aria-describedby={invalid ? `${id}-error` : undefined}
           onChange={(e) => {
             const input = e.currentTarget
-            if (input.value === "") {
-              onChange(0)
-              return
-            }
-            if (!input.checkValidity() || !Number.isFinite(input.valueAsNumber)) {
-              input.reportValidity()
-              return
-            }
-            onChange(input.valueAsNumber)
+            setDraft(input.value)
+            const valid = input.checkValidity() && !input.validity.badInput && (input.value === "" || Number.isFinite(input.valueAsNumber))
+            setInvalid(!valid)
+            onValidityChange?.(valid)
+            if (valid) onChange(input.value === "" ? 0 : input.valueAsNumber)
           }}
           className={cn(
             "w-full rounded-xl border border-cream-300 bg-white py-3 text-sm text-charcoal-800",
@@ -67,6 +75,7 @@ export function AssetField({
           )}
         />
       </div>
+      {invalid && <p id={`${id}-error`} role="alert" className="text-xs text-blush-700">{invalidMessage ?? "Enter a valid non-negative amount within the supported range."}</p>}
     </div>
   )
 }

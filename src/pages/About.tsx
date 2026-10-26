@@ -76,7 +76,7 @@ export function About() {
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.15]"
           style={{
-            backgroundImage: "url(/images/hero-pattern.png)",
+            backgroundImage: "url(/images/hero-pattern.jpg)",
             backgroundSize: "240px 240px",
             backgroundRepeat: "repeat",
           }}

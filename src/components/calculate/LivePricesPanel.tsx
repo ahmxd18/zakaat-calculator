@@ -3,14 +3,14 @@
  * Shows live gold/silver per-gram prices fetched from GoldAPI.
  * Displays loading, live, fallback and error states.
  */
-import { TrendingUp, RefreshCw, Loader2, AlertCircle, Info } from "lucide-react"
+import { TrendingUp, RefreshCw, Loader2, AlertCircle } from "lucide-react"
 import { Card } from "../ui/Card"
 import { RevealCard } from "../ui/Card"
 import type { PriceStatus } from "../../hooks/useMetalPrices"
 import type { MetalPrices } from "../../services/metalPrices"
 
 export interface LivePricesPanelProps {
-  prices: MetalPrices
+  prices: MetalPrices | null
   status: PriceStatus
   lastUpdated: Date | null
   currencySymbol: string
@@ -73,15 +73,8 @@ export function LivePricesPanel({
             {labels.error}
           </div>
         )}
-        {status === "fallback" && (
-          <div className="flex items-center gap-2 rounded-lg bg-cream-100 border border-cream-200 px-3 py-2 text-xs text-charcoal-500">
-            <Info className="h-3.5 w-3.5 shrink-0" />
-            {labels.fallbackNote}
-          </div>
-        )}
-
         {/* Price tiles — shown whenever we have any value to display */}
-        {status !== "loading" && (
+        {prices && status === "live" && (
           <div className="flex gap-4 pt-1">
             <div className="flex-1 rounded-xl bg-cream-50 border border-cream-200 px-4 py-3">
               <p className="text-xs text-charcoal-400 mb-0.5">{labels.goldPerGram}</p>

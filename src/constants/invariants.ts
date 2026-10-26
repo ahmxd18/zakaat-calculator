@@ -4,11 +4,12 @@
  * These values should NOT be translated.
  */
 
+import { SUPPORTED_CURRENCIES } from "../../shared/prices.mjs"
+
 export const INVARIANT_CONSTANTS = {
   contact: {
     email: "hello@zakaatcalculator.app",
     location: "Hyderabad, India",
-    responseTime: "Within 2-3 business days",
   },
   
   social: {
@@ -18,15 +19,8 @@ export const INVARIANT_CONSTANTS = {
     youtube: "#",
   },
   
-  currencies: ["GBP", "USD", "EUR", "AED", "SAR", "PKR", "BDT", "MYR", "INR", "IDR"] as const,
-  
-  nisaab: {
-    goldGrams: 85,
-    silverGrams: 595,
-  },
-  
-  zakaatRate: 2.5,
-  
+  currencies: SUPPORTED_CURRENCIES,
+
   copyright: {
     year: new Date().getFullYear(),
     entity: "Zakaat Calculator",

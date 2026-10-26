@@ -59,7 +59,7 @@ export function Home() {
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.2]"
           style={{
-            backgroundImage: "url(/images/hero-pattern.png)",
+            backgroundImage: "url(/images/hero-pattern.jpg)",
             backgroundSize: "320px 320px",
             backgroundRepeat: "repeat",
           }}
@@ -321,7 +321,7 @@ export function Home() {
               <div
                 className="pointer-events-none absolute inset-0 opacity-[0.15]"
                 style={{
-                  backgroundImage: "url(/images/hero-pattern.png)",
+                  backgroundImage: "url(/images/hero-pattern.jpg)",
                   backgroundSize: "200px 200px",
                   backgroundRepeat: "repeat",
                 }}

@@ -1,169 +1,127 @@
 # Zakaat Calculator
 
-A modern, scholarly-grounded web application to help Muslims calculate their annual Zakaat obligation with precision and ease.
+React 19, TypeScript and Vite calculator with English, Arabic, Urdu and Roman
+Urdu interfaces, four school profiles, local financial-data persistence, and
+validated live or manually entered metal prices.
 
-## 🌟 Features
+This is an educational estimate. Its jurisprudential policies have not received
+independent scholarly certification. See [the rule review register](docs/JURISPRUDENCE_REVIEW.md)
+and [the research notes](MADHAB_ZAKAAT_REFERENCE.md).
 
-- **Live Zakaat Calculation** - Real-time calculations as you type
-- **Multi-Currency Support** - 8 currencies with dynamic symbol display
-- **Privacy-First** - All data stored locally in your browser only
-- **Scholarly Grounded** - Based on Qur'an, Hadith, and classical Fiqh
-- **Mobile Responsive** - Beautiful UI on all devices
-- **Accessible** - WCAG compliant forms and navigation
+## Local setup
 
-## 🚀 Current Status: Phase 2 Complete
+Use Node **22.22.2+**, **24.15+**, or **26+**, matching the test runtime dependencies.
+The supported Node 22 LTS line is recommended.
 
-### ✅ Phase 1: Scaffolding (Complete)
-- React + Vite + TypeScript setup
-- TailwindCSS v4 styling
-- Framer Motion animations
-- React Router SPA navigation
-- 7 pages (Home, Calculate, FAQs, About, Contact, Donate, References)
+```sh
+npm ci
+cp .env.example .env
+```
 
-### ✅ Phase 2: Bug Fixes + Calculation Engine (Complete)
-- Fixed all 11 identified bugs
-- Implemented full Zakaat calculation logic
-- Added localStorage persistence
-- Dynamic currency symbols
-- Centralized layout architecture
-- Trust & verification disclaimers
+Run two terminals:
 
-### 🔜 Phase 3: API Integration (Planned)
-- Live gold/silver price feeds
-- Contact form backend
-- Payment gateway for donations
-- Multi-language support
+```sh
+npm run server
+```
 
-## 📦 Installation
-
-```bash
-# Clone repository
-git clone <repository-url>
-cd zakaat-calculator
-
-# Install dependencies
-npm install
-
-# Start development server
+```sh
 npm run dev
+```
 
-# Build for production
+Vite forwards `/api` to the local server on port 8787. Without an API key or a
+valid quote, the calculator remains usable with explicitly confirmed current
+manual prices in the selected currency. Unavailable prices never imply zero due.
+
+## Verification
+
+```sh
+npm run check
+npm run audit
+```
+
+The check runs engine regressions, rendered interaction tests, HTTP integration
+tests, TypeScript checking and a production build. CI runs the same checks on
+Node 22. Browser geometry/animation is not simulated by the DOM interaction
+tests; check responsive layout in a real browser before release. Tests require
+permission to bind an ephemeral localhost port.
+
+## Production
+
+```sh
 npm run build
+npm start
 ```
 
-## 🧮 Calculation Methodology
+The Node server serves `dist`, handles SPA route fallbacks and exposes only
+`GET /api/metal-prices?currency=CODE`. Put it behind an HTTPS reverse proxy in
+production. The default bind address is localhost; set `HOST` deliberately for
+your hosting environment. Keep `.env` outside public assets.
 
-- **Nisaab Threshold:** Lower of 85g gold or 595g silver value
-- **Zakaat Rate:** 2.5% (1/40th) of net zakatable wealth
-- **Default Standard:** Hanafi silver Nisaab
-- **Assets Included:** Cash, gold, silver, stocks, crypto, business inventory, receivables
-- **Deductions:** Short-term debts and immediate bills
+Static hosting is still supported for the frontend: deploy all of `dist`, add
+an index.html fallback for application routes, and route `/api/metal-prices` to
+an equivalent server endpoint. Without an endpoint, manual prices work. HTML is
+revalidated; hashed assets can be cached immutably. Retain previous hashed assets
+briefly during deployments so already-open clients can finish loading routes.
 
-See [References page](src/constants/content.ts) for full scholarly citations.
+The server caches a valid pair per supported currency, coalesces simultaneous
+requests, times out upstream requests, and backs off after failures. It accepts
+no provider URLs or financial inputs. Per-process limits are 60 API requests per
+socket address per minute, with bounded in-memory counters. Behind a reverse
+proxy, that address may be shared: configure edge rate limiting for real clients.
+Do not trust arbitrary forwarded-IP headers. Multiple server instances need a
+shared cache or provider quota controls at the hosting layer.
 
-## 📁 Project Structure
+## Structure
 
-```
-src/
-├── components/
-│   ├── layout/          # Layout components (Navbar, Footer, PageLayout)
-│   └── ui/              # Reusable UI components (Button, Card, etc.)
-├── constants/
-│   ├── content.ts       # All user-facing text
-│   └── layout.ts        # Layout constants
-├── pages/               # Route pages
-├── routes/              # Route configuration
-├── utils/
-│   ├── cn.ts            # Tailwind utility
-│   ├── currency.ts      # Currency mappings
-│   └── zakaat.ts        # Core calculation engine
-├── App.tsx
-└── main.tsx
-```
+- `src/utils/zakaat.ts`, `decimal.ts`: pure calculations and exact-decimal eligibility.
+- `src/constants/madhab.ts`: existing school policies.
+- `src/utils/calculatorStorage.ts`: validated snapshot/legacy migration.
+- `src/hooks/useCalculator.ts`: calculator state, persistence and time coordination.
+- `src/components/calculate/`: form, stable typed asset metadata and presentation.
+- `src/services/metalPrices.ts`: same-origin browser price client.
+- `shared/prices.mjs`: shared quote validation and financial constants.
+- `server/`: credentialed provider client, bounded cache and HTTP/static server.
+- `src/routes/AppRoutes.tsx`: lazy-loaded pages.
+- `src/locales/`: localized content; language/madhab preferences use React Context.
 
-## 🔧 Key Technologies
+## Data and calculation boundaries
 
-- **React 19** - UI framework
-- **TypeScript** - Type safety
-- **Vite** - Build tool & dev server
-- **TailwindCSS v4** - Styling
-- **Framer Motion** - Animations
-- **React Router** - Navigation
-- **localStorage** - Client-side persistence
+Financial inputs are stored in browser localStorage, not transmitted to the
+price server. Use a private device/browser profile for sensitive balances. A
+first untouched visit may contact ipapi.co to suggest a supported currency;
+returning saved sessions do not need that lookup. The price provider sees the
+server's requests and currency, not the entered balances. Neither service is an
+analytics integration. Storage failures are visible, and invalid snapshots are
+preserved until the user reviews or resets them.
 
-## 📚 Documentation
+Amounts, currency, hawl and nisab override share one versioned snapshot. Legacy
+entries migrate without deleting the old entries. Missing legacy currency must
+be reviewed. Changing currency requires confirmation before clearing amounts;
+it does not convert balances. Manual prices are session-only, labelled and expire
+after one hour. Live quotes expire using provider time and are never replaced by
+historical prices from another currency.
 
-- [QUICK_START.md](QUICK_START.md) - Get started developing
-- [PHASE_2_SUMMARY.md](PHASE_2_SUMMARY.md) - What changed in Phase 2
-- [API_INTEGRATION_GUIDE.md](API_INTEGRATION_GUIDE.md) - Future API enhancements
-- [PERFORMANCE_NOTES.md](PERFORMANCE_NOTES.md) - Optimization tasks
+Inputs are nonnegative and bounded at 1 trillion; computed values above 100
+trillion are rejected. Exact decimal arithmetic determines nisab eligibility;
+display uses two decimals. Metal weights must be **fine-metal grams**, excluding
+stones and other material. Foreign cash must already be converted to the selected
+currency. Avoid overlapping cash, investments, receivables, bills and debts.
 
-## 🧪 Testing the Calculator
+School differences are preserved. Income shares still use the documented 25%
+estimate. Hawl uses the existing 354-day approximation unless the user enters a
+confirmed lunar anniversary as a Gregorian date. Default mode does not establish
+hawl eligibility. Obtain qualified advice for disputed or unsupported cases.
 
-1. Navigate to `/calculate`
-2. Select your currency (GBP, USD, EUR, etc.)
-3. Enter your assets - watch live calculation in sidebar
-4. Values persist on page reload (localStorage)
-5. Click Reset to clear all data
+The contact form is an explicitly disabled placeholder. Charity links navigate
+to external sites; the application does not process payments.
 
-### Example Test Values:
-```
-Cash: £10,000
-Gold: 100 grams (@ £50/g = £5,000)
-Stocks: £15,000
-Total Assets: £30,000
-Nisaab: £357 (595g silver @ £0.60/g)
-Zakaat Due: £750 (2.5% of £30,000)
-```
+## Release order
 
-## 🔒 Privacy & Data
-
-- **No backend** - All calculations happen in your browser
-- **No tracking** - No analytics or cookies
-- **localStorage only** - Data never leaves your device
-- **Reset anytime** - Clear all data with one click
-
-## ⚠️ Pending Tasks
-
-### Critical:
-- [ ] Optimize hero-pattern.png (1.9MB → <20KB)
-
-### High Priority:
-- [ ] Integrate live gold/silver price API
-- [ ] Connect contact form backend
-- [ ] Review vite-plugin-singlefile necessity
-
-### Future Enhancements:
-- [ ] Manual Nisaab price override
-- [ ] Gold vs. silver standard toggle
-- [ ] Multi-language support (Arabic, Urdu, etc.)
-- [ ] RTL layout support
-- [ ] PDF report generation
-- [ ] Email reminder for next Zakaat date
-
-## 🤝 Contributing
-
-This is a community project. Contributions welcome:
-
-1. **Scholarly Review** - Verify citations and rulings
-2. **Code** - Bug fixes, features, optimizations
-3. **Design** - UI/UX improvements
-4. **Content** - Translations, FAQs, educational material
-
-## 📄 License
-
-[Specify license]
-
-## 📧 Contact
-
-For questions, corrections, or scholarly review:
-- Email: hello@zakaatcalculator.app
-- See `/contact` page in app
-
-## 🙏 Acknowledgments
-
-Built with the intention of making Zakaat calculation accessible and accurate for Muslims worldwide. May Allah accept this effort and make it a means of benefit.
-
----
-
-**Note:** This calculator is for educational purposes. For personal Zakaat queries, please consult a qualified Islamic scholar.
+1. Review the new unstaged changes separately from the already-staged immediate fixes.
+2. Commit those reviewable units, then open a PR against `main` and require CI.
+3. Validate deployment routing, API configuration, cold/warm quotes, manual fallback,
+   storage recovery, all languages and mobile layout in staging.
+4. Complete the rule-review register and approved numerical fixtures before
+   presenting results as an authoritative obligation.
+5. Merge the combined branch after those gates; archive source branches only after
+   verifying the final PR. No branch merge or deletion is performed by these scripts.

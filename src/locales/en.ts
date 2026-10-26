@@ -78,11 +78,11 @@ export const en = {
       subheading: "We've combined scholarly research with modern UX to make Zakaat calculation as clear and easy as possible.",
       accurate: {
         title: "Accurate Calculations",
-        description: "Based on scholarly consensus and the latest gold/silver Nisaab values.",
+        description: "Calculations use documented assumptions and validated metal prices; scholarly review is pending.",
       },
       scholarly: {
         title: "Scholarly Grounded",
-        description: "Every formula is referenced against Qur'an, Hadith, and classical Fiqh.",
+        description: "Research references are provided; they do not establish scholarly certification of each formula.",
       },
       easy: {
         title: "Easy to Donate",
@@ -106,6 +106,23 @@ export const en = {
     subheading: "Enter your assets below and we'll calculate your Zakaat obligation based on the current Nisaab threshold.",
     currencyLabel: "Currency",
     currencyNote: "All values in selected currency",
+    safety: {
+      externalChange: "Another tab changed the saved inputs. Your current inputs are retained. Reload to use saved data, or continue to save these inputs instead.",
+      invalidAmount: "Enter a non-negative number up to 1 trillion.",
+      schoolDefault: "Follow school default",
+      confirmCurrency: "Change currency and clear inputs",
+      cancelCurrency: "Keep current currency",
+      "currencyChange": "Changing currency clears all asset amounts and hawl history; no currency conversion is performed. Continue?",
+      "restoreWarning": "Saved data could not be verified. Review the amounts and currency before continuing, or reset. Existing saved data will be preserved until you continue.",
+      "saveWarning": "Your changes could not be saved in this browser. Keep this page open or record your inputs.",
+      "acceptRestored": "Continue with reviewed inputs",
+      "manualNote": "If live prices are unavailable, enter verified current prices per gram in the selected currency. Confirmed prices expire after one hour.",
+      "useManual": "Use these prices",
+      "manualActive": "Using your manually confirmed prices, not a live quote.",
+      "useLive": "Use live prices",
+      "unavailable": "Calculation unavailable. Review saved data and provide valid current prices. Amounts must stay within the supported range.",
+      "estimate": "Educational estimate, not independently certified. Income shares use a 25% asset estimate. Hawl uses 354 days unless a confirmed anniversary is supplied. Default mode does not establish hawl eligibility."
+},
     resetBtn: "Reset Form",
     
     sections: {
@@ -120,7 +137,7 @@ export const en = {
       },
       goldSilver: {
         label: "Gold & Silver",
-        description: "Enter stored/non-worn metal separately from permissible personal-use jewellery worn regularly. Put non-exempt or investment jewellery in the stored/non-worn field.",
+        description: "Enter fine-metal grams after adjusting for purity (gold: gross metal weight × karat ÷ 24). Exclude stones. Separate stored metal from eligible personal-use jewellery.",
         fields: {
           goldGrams: "Stored / non-worn gold (grams)",
           wornGoldGrams: "Worn personal-use gold (grams)",
@@ -179,6 +196,8 @@ export const en = {
     },
 
     hawl: {
+      anniversary: "Optional: confirmed hawl anniversary (Gregorian date)",
+      anniversaryNote: "Use a lunar anniversary confirmed with a trusted calendar or scholar. Leave blank to retain the 354-day estimate. Enter the anniversary for the current hawl after any required reset.",
       title: "Hawl (lunar-year) eligibility",
       description: "Enter the start date for the hawl being checked. A lunar year is approximated as 354 days; where the selected school resets the hawl after a dip, use the date Nisāb was reached again.",
       startDate: "Hawl start date (when wealth reached Nisāb)",
@@ -188,11 +207,11 @@ export const en = {
     
     prices: {
       liveLabel: "Live Nisaab Prices",
-      liveNote: "Updated hourly from market data",
+      liveNote: "Quotes expire after one hour; unavailable quotes are not used.",
       goldPerGram: "Gold per gram",
       silverPerGram: "Silver per gram",
       loading: "Fetching live prices…",
-      error: "Could not load prices — using fallback values",
+      error: "Live prices unavailable. Enter verified prices below.",
       fallbackNote: "Using fallback prices. Live data unavailable.",
       lastUpdated: "Last updated",
       refresh: "Refresh prices",
@@ -291,7 +310,7 @@ export const en = {
     values: {
       scholarly: {
         title: "Scholarly Integrity",
-        description: "Every calculation method is grounded in Qur'an, authentic Hadith, and scholarly consensus (Ijma). We cite our sources transparently.",
+        description: "We document current policy assumptions and seek independent qualified review before claiming religious authority.",
       },
       accessibility: {
         title: "Accessibility",
@@ -326,7 +345,6 @@ export const en = {
     creatorRole: "Developer & Creator · Web development · React / Next.js",
     creatorBio: "I'm a software developer passionate about building meaningful digital experiences that solve real-world problems. I created this Zakaat calculator to use my technical skills in service of the Muslim community, making Zakaat calculations easier to understand and more accessible. My focus is thoughtful design, transparent calculations, and carefully researched Islamic references. This is a software project, not a claim to religious authority; its content still needs review by qualified scholars.",
     creatorSkills: ["Software development", "UI/UX design", "Innovation", "Islamic technology"],
-    portraitComingSoon: "Portrait coming soon",
     
     disclaimerWarning: "This calculator is an educational tool, not a religious authority. No qualified scholars have reviewed or approved its calculations or citations yet. Please consult a qualified scholar for personal guidance.",
   },
@@ -374,7 +392,7 @@ export const en = {
     },
     
     scholarlyNote: "🕌 Scholarly Queries",
-    scholarlyNoteText: "For detailed Fiqh questions or corrections to our methodology, please mention \"Scholarly Query\" in the subject field and we'll route your message to our Fiqh committee.",
+    scholarlyNoteText: "For scholarly questions or corrections, email the developer. No Fiqh committee or scholarly endorsement is claimed.",
   },
   
   donate: {
@@ -470,7 +488,7 @@ export const en = {
     methodologyHeading: "Our Methodology",
     methodologyText: "Selecting a madhab applies its Nisāb recommendation and the school-specific rules shown on the calculator, including jewellery, debt, and hawl treatment. Nisāb can be overridden, and Default (No School) remains available. These calculations are estimates based on a research reference; consult a qualified scholar for personal rulings.",
     methodologyLink: "Spot an error or have a scholarly correction?",
-    methodologyLinkText: "Contact our Fiqh committee →",
+    methodologyLinkText: "Send a scholarly correction →",
     
     verificationWarning: "These references and concise meanings are provided for educational study; they are not a scholarly approval of the calculator. Consult a qualified scholar for personal rulings.",
   },
@@ -483,6 +501,7 @@ export const en = {
   },
   
   common: {
+    languageLoadError: "Language could not load. The current language is retained.",
     loading: "Loading...",
     error: "Error",
     tryAgain: "Try Again",

@@ -2,9 +2,8 @@
  * Contact.tsx
  * Contact form UI — non-functional placeholder, full visual design.
  */
-import { useState } from "react";
 import { motion } from "framer-motion";
-import { Mail, MapPin, Clock, Send, CheckCircle2, Info } from "lucide-react";
+import { Mail, MapPin, Clock, Send, Info } from "lucide-react";
 import { useT } from "../contexts/i18n";
 import { INVARIANT_CONSTANTS } from "../constants/invariants";
 import { Button }        from "../components/ui/Button";
@@ -21,8 +20,6 @@ const ContactInfoIcon: Record<string, React.FC<{ className?: string }>> = {
 
 export function Contact() {
   const t = useT();
-  const [submitted] = useState(false);
-  const [formDisabled] = useState(true); // No backend yet
   
   const contactInfo = [
     { icon: "mail", label: t.contact.info.email, value: INVARIANT_CONSTANTS.contact.email },
@@ -127,24 +124,6 @@ export function Contact() {
                     </div>
                   </div>
                   
-                  {submitted ? (
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="flex flex-col items-center justify-center gap-4 py-16 text-center"
-                    >
-                      <CheckCircle2 className="h-14 w-14 text-sage-500" />
-                      <h3
-                        className="text-2xl font-light text-charcoal-800"
-                        style={{ fontFamily: "var(--font-display)" }}
-                      >
-                        {t.contact.form.successTitle}
-                      </h3>
-                      <p className="text-charcoal-500 text-sm max-w-sm">
-                        {t.contact.form.successText}
-                      </p>
-                    </motion.div>
-                  ) : (
                     <form onSubmit={handleSubmit} className="space-y-5" noValidate>
                       {/* Name + Email row */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -207,7 +186,7 @@ export function Contact() {
                         variant="primary"
                         size="lg"
                         fullWidth
-                        disabled={formDisabled}
+                        disabled
                         rightIcon={<Send className="h-4 w-4" />}
                       >
                         {t.contact.form.submitLabel}
@@ -217,7 +196,6 @@ export function Contact() {
                         {t.contact.form.disabledNotice}
                       </p>
                     </form>
-                  )}
                 </Card>
               </RevealCard>
             </div>

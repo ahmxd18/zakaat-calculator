@@ -79,11 +79,11 @@ export const urRm: Translations = {
       subheading: "Humne ilmi tehqeeq ko jadeed UX ke saath milaya hai taake zakaat ka hisaab jitna wazeh aur aasaan ho sake banaya jaye.",
       accurate: {
         title: "Sahi Hisaab",
-        description: "Ulamaa ki ittifaq aur taza sone/chaandi ki nisaab qeematon par mabni.",
+        description: "Hisab documented assumptions aur verified metal prices par hai; ilmi review baqi hai.",
       },
       scholarly: {
         title: "Shari Bunyadon Par",
-        description: "Har formula Quran, Hadees, aur purani Fiqh se murajaat kiya gaya hai.",
+        description: "Research references maujood hain; har formula ki ilmi certification nahin.",
       },
       easy: {
         title: "Aasan Khairat",
@@ -107,6 +107,23 @@ export const urRm: Translations = {
     subheading: "Neeche apne maal daalein aur hum aapki zakaat ki zimmedari maujuda nisaab ke mutabiq hisaab kar denge.",
     currencyLabel: "Currency",
     currencyNote: "Tamaam qeemtein muntakhib currency mein",
+    safety: {
+      externalChange: "Doosre tab ne saved inputs badle hain. Current inputs yahan barqarar hain. Saved data ke liye reload karein, ya in inputs ko save karne ke liye jaari rakhein.",
+      invalidAmount: "Zero ya musbat raqam dein, zyada se zyada ek trillion.",
+      schoolDefault: "Maslak ka default istemal karein",
+      confirmCurrency: "Currency badlein aur inputs saaf karein",
+      cancelCurrency: "Maujooda currency rakhein",
+      "currencyChange": "Currency badalne se tamam raqam aur hawl history saaf hogi; conversion nahin hogi. Jaari rakhein?",
+      "restoreWarning": "Saved data verify nahin hua. Raqam aur currency check karein ya reset karein. Jaari rakhne tak purana data mehfooz rahega.",
+      "saveWarning": "Tabdeeliyan save nahin huin. Page khula rakhein ya inputs likh lein.",
+      "acceptRestored": "Review kiye inputs se jaari rakhein",
+      "manualNote": "Live prices na milein to selected currency mein per gram verified current prices dein. Yeh ek ghante baad expire hongi.",
+      "useManual": "Yeh prices istemal karein",
+      "manualActive": "Aap ki manually confirmed prices istemal ho rahi hain, live quote nahin.",
+      "useLive": "Live prices istemal karein",
+      "unavailable": "Calculation dastiyab nahin. Saved data, current prices aur raqam check karein.",
+      "estimate": "Taleemi andaza, independently certified nahin. Income shares ka 25% shamil hai. Confirmed anniversary na ho to hawl 354 din hai. Default hawl eligibility verify nahin karta."
+},
     resetBtn: "Reset Karein",
     
     sections: {
@@ -121,7 +138,7 @@ export const urRm: Translations = {
       },
       goldSilver: {
         label: "Sona Aur Chaandi",
-        description: "Mehfooz sona/chaandi ko rozana zaati istemal ke zevar se alag darj karein. Ghair-mustasna ya sarmaya kari ke zevar mehfooz maal wale khane mein likhein.",
+        description: "Khalis metal grams dein (gold: metal weight × karat ÷ 24). Pathar nikaalein; stored metal aur personal jewellery alag rakhein.",
         fields: {
           goldGrams: "Mehfooz / ghair istemal sona (grams)",
           wornGoldGrams: "Istemal mein sona (grams)",
@@ -180,6 +197,8 @@ export const urRm: Translations = {
     },
 
     hawl: {
+      anniversary: "Ikhtiyari: tasdeeq shuda hawl anniversary (Gregorian date)",
+      anniversaryNote: "Motabar lunar calendar ya aalim se confirmed date dein. Khaali chhorne par 354 din ka andaza rahega. Reset ke baad maujooda hawl ki date dein.",
       title: "Hawl (qamri saal) ki ahliyat",
       description: "Jis hawl ka hisaab karna hai uski shuru ki tareekh darj karein. Qamri saal taqreeban 354 din hai; jin madhahib mein nisaab kam hone par hawl dobara shuru hota hai, wahan nisaab dobara pohanchne ki tareekh darj karein.",
       startDate: "Hawl shuru hone ki tareekh (maal nisaab tak pohanchne par)",
@@ -189,11 +208,11 @@ export const urRm: Translations = {
     
     prices: {
       liveLabel: "Nisaab Ki Zinda Qeemtein",
-      liveNote: "Har ghante bazaar ke data se update hoti hain",
+      liveNote: "Prices ek ghante baad expire hoti hain; unavailable prices istemal nahin hotin.",
       goldPerGram: "Sona fی gram",
       silverPerGram: "Chaandi fی gram",
       loading: "Zinda qeemtein la raha hai…",
-      error: "Qeemtein load nahi ho sakeen — backup qeemtein istemal ho rahi hain",
+      error: "Live prices dastiyab nahin. Neeche verified prices dein.",
       fallbackNote: "Backup qeemtein istemal ho rahi hain. Zinda data dastiyab nahi.",
       lastUpdated: "Aakhri update",
       refresh: "Qeemtein refresh karein",
@@ -292,7 +311,7 @@ export const urRm: Translations = {
     values: {
       scholarly: {
         title: "Ilmi Diyaanat",
-        description: "Har hisaab ka tareeqa Quran, sahih Hadees, aur ulamaa ki ittifaq mein bunyadon rakhta hai. Hum apne hawale saaf tor par zikar karte hain.",
+        description: "Hum current assumptions wazeh karte hain; dini authority ke dawe se pehle qualified independent review darkar hai.",
       },
       accessibility: {
         title: "Qabil-e-Rasaai",
@@ -327,7 +346,6 @@ export const urRm: Translations = {
     creatorRole: "Developer aur Creator · Web development · React / Next.js",
     creatorBio: "Main software developer hoon aur ba-maqsad digital tajurbe banane ka shauq rakhta hoon jo haqeeqi masail hal karein. Maine yeh Zakaat calculator apni technical maharat Muslim community ki khidmat mein istemal karne aur Zakaat ke hisaab ko samajhna aur hasil karna aasan banane ke liye banaya. Meri tawajju soch samajh kar design, saaf hisaabaat aur ehtiyaat se tehqeeq kiye gaye Islami hawalon par hai. Yeh software ka project hai, deeni authority ka daawa nahi; iske mazmoon ko abhi ahl ulamaa ke jaize ki zaroorat hai.",
     creatorSkills: ["Software development", "UI/UX design", "Innovation", "Islami technology"],
-    portraitComingSoon: "Tasveer jald shamil hogi",
     
     disclaimerWarning: "Yeh calculator taleemi tool hai, deeni authority nahi. Ahl ulamaa ne abhi iske hisaabaat ya hawalon ka jaiza le kar manzoori nahi di. Zaati rehnumai ke liye kisi mu'tabar aalim se mashwara karein.",
   },
@@ -375,7 +393,7 @@ export const urRm: Translations = {
     },
     
     scholarlyNote: "🕌 Ilmi Sawaalat",
-    scholarlyNoteText: "Tafsili Fiqh ke sawaalaat ya hamare manhaj ki islah ke liye, baraahe meharbani mauzu ke khaane mein \"Ilmi Sawal\" ka zikar karein aur hum aapka paigham apni Fiqh committee tak pohanchaenge.",
+    scholarlyNoteText: "Ilmi sawal ya islah ke liye developer ko email karein. Fiqh committee ya scholarly endorsement ka dawa nahin.",
   },
   
   donate: {
@@ -471,7 +489,7 @@ export const urRm: Translations = {
     methodologyHeading: "Hamara Manhaj",
     methodologyText: "Madhab chunne se tajweez shuda nisaab aur calculator mein dikhaye gaye school-specific ahkaam laagu hote hain, jin mein zevar, qarz aur hawl ke usool shamil hain. Nisaab ko override kiya ja sakta hai aur Default (koi madhab nahi) ka option bhi maujood hai. Yeh hisaabaat research reference par mabni andazay hain; zaati hukm ke liye kisi mu'tabar aalim se mashwara karein.",
     methodologyLink: "Koi ghalti dekhi ya koi ilmi islah hai?",
-    methodologyLinkText: "Hamari Fiqh committee se rabta karein →",
+    methodologyLinkText: "Ilmi islah bhejein →",
     
     verificationWarning: "Yeh hawale aur mukhtasar mafahim taleemi mutale ke liye hain, aur calculator ki ilmi tasdeeq nahi. Zaati ahkaam ke liye kisi ahl aalim se rujoo karein.",
   },
@@ -484,6 +502,7 @@ export const urRm: Translations = {
   },
   
   common: {
+    languageLoadError: "Zabaan load nahin hui. Maujooda zabaan barqarar hai.",
     loading: "Load ho raha hai...",
     error: "Ghalti",
     tryAgain: "Dobara Koshish Karein",

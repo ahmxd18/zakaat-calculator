@@ -2,11 +2,6 @@
  * madhab.tsx
  * Context for the user's selected school of Fiqh (madhab).
  * Persists to localStorage. Provides the selected madhab globally.
- *
- * Future methods to add (Phase 3):
- *   "majority"  — ruling shared by 3+ schools (Jumhūr)
- *   "conservative" — widest zakatable scope across schools
- *   "salafi"    — follows strongest Hadith directly
  */
 import { createContext, useContext, useState, type ReactNode } from "react"
 import { MADHABS, type Madhab, type MadhabMeta } from "../constants/madhab"

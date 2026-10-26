@@ -4,11 +4,12 @@
  */
 import { Card } from "../ui/Card"
 import { RevealCard } from "../ui/Card"
-import { Button } from "../ui/Button"
 import type { ZakaatResult } from "../../utils/zakaat"
 
 export interface ZakaatSummaryProps {
-  result: ZakaatResult
+  result: ZakaatResult | null
+  unavailable: string
+  estimate: string
   formatCurrency: (amount: number) => string
   labels: {
     title: string
@@ -31,7 +32,8 @@ export interface ZakaatSummaryProps {
   }
 }
 
-export function ZakaatSummary({ result, formatCurrency, labels }: ZakaatSummaryProps) {
+export function ZakaatSummary({ result, formatCurrency, labels, unavailable, estimate }: ZakaatSummaryProps) {
+  if (!result) return <Card padding="lg"><p role="status">{unavailable}</p></Card>
   const rows = [
     { label: labels.totalAssets,      value: formatCurrency(result.totalAssets) },
     { label: labels.totalDeductions, value: formatCurrency(result.deductionsApplied) },
@@ -105,9 +107,7 @@ export function ZakaatSummary({ result, formatCurrency, labels }: ZakaatSummaryP
           </p>
         </div>
 
-        <Button variant="outline" size="sm" fullWidth>
-          {labels.payNowBtn}
-        </Button>
+        <p className="text-xs text-charcoal-600">{estimate}</p>
 
         <p className="text-[10px] text-charcoal-400 leading-relaxed text-center">
           {labels.disclaimer}

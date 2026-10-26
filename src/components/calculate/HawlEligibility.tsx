@@ -1,9 +1,13 @@
 export interface HawlEligibilityProps {
+  dueDate?: string
+  onDueDateChange?: (value: string) => void
   startDate: string
   fellBelowNisaab: boolean
   onStartDateChange: (value: string) => void
   onFellBelowNisaabChange: (value: boolean) => void
   labels: {
+    anniversary: string
+    anniversaryNote: string
     title: string
     description: string
     startDate: string
@@ -14,6 +18,8 @@ export interface HawlEligibilityProps {
 }
 
 export function HawlEligibility({
+  dueDate = "",
+  onDueDateChange,
   startDate,
   fellBelowNisaab,
   onStartDateChange,
@@ -46,6 +52,11 @@ export function HawlEligibility({
           className="w-full rounded-lg border border-cream-300 bg-white px-3 py-2 text-sm text-charcoal-800 focus:outline-none focus:ring-2 focus:ring-sage-400"
         />
       </label>
+      {onDueDateChange && <label className="block space-y-1.5">
+        <span className="text-xs font-medium text-charcoal-600">{labels.anniversary}</span>
+        <input type="date" value={dueDate} min={startDate || undefined} onChange={event => onDueDateChange(event.target.value)} className="w-full rounded-lg border border-cream-300 bg-white px-3 py-2 text-sm" />
+        <span className="block text-xs text-charcoal-500">{labels.anniversaryNote}</span>
+      </label>}
       <label className="flex items-start gap-2 text-xs leading-relaxed text-charcoal-600">
         <input
           type="checkbox"
